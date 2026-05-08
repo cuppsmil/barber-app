@@ -28,7 +28,7 @@
                   HorizontalOptions="Center"
                   IsVisible="False"/>
 
-            <!-- Режим входа -->
+            <!-- 🔹 РЕЖИМ ВХОДА -->
             <VerticalStackLayout x:Name="LoginMode" Spacing="15">
                 <Label Text="Вход" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center"/>
 
@@ -54,14 +54,15 @@
                 <Label Text="Нет аккаунта? Зарегистрироваться"
                       TextColor="Purple"
                       TextDecorations="Underline"
-                      HorizontalOptions="Center">
+                      HorizontalOptions="Center"
+                      Margin="0,10,0,0">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnToggleModeClicked"/>
                     </Label.GestureRecognizers>
                 </Label>
             </VerticalStackLayout>
 
-            <!-- Режим регистрации -->
+            <!-- 🔹 РЕЖИМ РЕГИСТРАЦИИ -->
             <VerticalStackLayout x:Name="RegisterMode" Spacing="15" IsVisible="False">
                 <Label Text="Регистрация" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center"/>
 
@@ -104,14 +105,24 @@
                 <Label Text="Уже есть аккаунт? Войти"
                       TextColor="Purple"
                       TextDecorations="Underline"
-                      HorizontalOptions="Center">
+                      HorizontalOptions="Center"
+                      Margin="0,10,0,0">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnToggleModeClicked"/>
                     </Label.GestureRecognizers>
                 </Label>
             </VerticalStackLayout>
 
+            <!-- ✅ КНОПКА АДМИНА — ВЫНЕСЕНА ОТДЕЛЬНО (всегда видна) -->
+            <BoxView HeightRequest="1" Color="#E5E7EB" Margin="0,20"/>
+
+            <Button Text="👑 Войти как Администратор" 
+                    BackgroundColor="#1F2937"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    Clicked="OnAdminLoginClicked"/>
+
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

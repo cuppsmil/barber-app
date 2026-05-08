@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BarberApp.ViewModels"
+             xmlns:models="clr-namespace:BarberApp.Models"
+             x:Class="BarberApp.Views.AdminClientsPage"
+             Title="Клиенты"
+             BackgroundColor="#F9FAFB">
+
+    <ContentPage.BindingContext>
+        <vm:AdminClientsViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Frame Grid.Row="0" BackgroundColor="White" Padding="16" HasShadow="True">
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0" Text="Клиенты салона" FontSize="20" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+                <Button Grid.Column="1" Text="Назад" BackgroundColor="#6B46C1" TextColor="White" CornerRadius="8" Padding="16,8" Command="{Binding GoBackCommand}"/>
+            </Grid>
+        </Frame>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Clients}" Margin="16">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:SalonClient">
+                    <Frame BackgroundColor="White" Margin="0,0,0,12" Padding="16" CornerRadius="12" BorderColor="#E5E7EB" HasShadow="True">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <Border Grid.Column="0" WidthRequest="50" HeightRequest="50" StrokeShape="RoundRectangle 25" StrokeThickness="2" Stroke="#10B981" BackgroundColor="#D1FAE5">
+                                <Label Text="{Binding Name}" TextColor="#065F46" FontAttributes="Bold" FontSize="18" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Margin="16,0,0,0" VerticalOptions="Center">
+                                <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="#111827"/>
+                                <Label Text="{Binding Phone}" FontSize="14" TextColor="#6B7280"/>
+                                <Label Text="{Binding Login}" FontSize="12" TextColor="#9CA3AF" Margin="0,2,0,0"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2" Text="Клиент" FontSize="12" TextColor="#9CA3AF" VerticalOptions="Center"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

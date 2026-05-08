@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BarberApp.ViewModels"
+             x:Class="BarberApp.Views.AdminDashboardPage"
+             BackgroundColor="#F9FAFB"
+             Title="Админ-панель">
+
+    <ContentPage.BindingContext>
+        <vm:AdminDashboardViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label Text="Панель администратора" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   TextColor="#111827"
+                   Margin="0,10,0,20"/>
+
+            <Frame BackgroundColor="White" CornerRadius="12" Padding="0" HasShadow="True">
+                <Button Text="Записи" 
+                        BackgroundColor="Transparent" 
+                        TextColor="#111827" 
+                        FontSize="18" 
+                        Padding="20"
+                        HorizontalOptions="FillAndExpand"
+                        Command="{Binding OpenAppointmentsCommand}"/>
+            </Frame>
+
+            <Frame BackgroundColor="White" CornerRadius="12" Padding="0" HasShadow="True">
+                <Button Text="Мастера" 
+                        BackgroundColor="Transparent" 
+                        TextColor="#111827" 
+                        FontSize="18" 
+                        Padding="20"
+                        HorizontalOptions="FillAndExpand"
+                        Command="{Binding OpenMastersCommand}"/>
+            </Frame>
+
+            <Frame BackgroundColor="White" CornerRadius="12" Padding="0" HasShadow="True">
+                <Button Text="Клиенты" 
+                        BackgroundColor="Transparent" 
+                        TextColor="#111827" 
+                        FontSize="18" 
+                        Padding="20"
+                        HorizontalOptions="FillAndExpand"
+                        Command="{Binding OpenClientsCommand}"/>
+            </Frame>
+
+            <Frame BackgroundColor="White" CornerRadius="12" Padding="0" HasShadow="True">
+                <Button Text="Услуги" 
+                        BackgroundColor="Transparent" 
+                        TextColor="#111827" 
+                        FontSize="18" 
+                        Padding="20"
+                        HorizontalOptions="FillAndExpand"
+                        Command="{Binding OpenServicesCommand}"/>
+            </Frame>
+
+            <BoxView HeightRequest="1" Color="#E5E7EB" Margin="0,10"/>
+
+            <Button Text="Выйти из админки" 
+                    BackgroundColor="#EF4444" 
+                    TextColor="White" 
+                    CornerRadius="12" 
+                    HeightRequest="50"
+                    FontSize="16"
+                    Command="{Binding LogoutCommand}"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

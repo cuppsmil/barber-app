@@ -1,5 +1,6 @@
 using BarberApp.ViewModels;
-using BarberApp.Services;
+using System.Diagnostics;
+
 namespace BarberApp.Views;
 
 public partial class ProfilePage : ContentPage
@@ -8,27 +9,18 @@ public partial class ProfilePage : ContentPage
     {
         InitializeComponent();
         BindingContext = new ProfileViewModel();
-        System.Diagnostics.Debug.WriteLine("✅ ProfilePage инициализирован");
+        Debug.WriteLine("✅ ProfilePage создан");
     }
 
-    protected override void OnAppearing()
+    // ✅ ОБНОВЛЯЕМ ПРИ КАЖДОМ ПОЯВЛЕНИИ СТРАНИЦЫ
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-        System.Diagnostics.Debug.WriteLine("🟢 OnAppearing сработал -> принудительно обновляем");
+        Debug.WriteLine("🔄 ProfilePage: OnAppearing -> обновляем данные");
+
         if (BindingContext is ProfileViewModel vm)
         {
-            vm.RefreshAsync();
-        }
-    }
-
-    private async void OnLogoutClicked(object sender, EventArgs e)
-    {
-        var secureStorage = new SecureStorageService();
-        await secureStorage.ClearCredentialsAsync();
-
-        if (Application.Current != null && Application.Current.MainPage != null)
-        {
-            Application.Current.MainPage = new NavigationPage(new LoginPage());
+            await vm.RefreshAsync();
         }
     }
 }

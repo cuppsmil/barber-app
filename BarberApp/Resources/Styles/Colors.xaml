@@ -11,4 +11,5 @@
     <Color x:Key="TextSecondary">#666666</Color>
     <Color x:Key="Error">#EF4444</Color>
 
+
 </ResourceDictionary>

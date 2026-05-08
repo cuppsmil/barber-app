@@ -49,6 +49,42 @@ build_metadata.AdditionalFiles.ManifestResourceName = BarberApp.Resources.Styles
 build_metadata.AdditionalFiles.TargetPath = Resources\Styles\Styles.xaml
 build_metadata.AdditionalFiles.RelativePath = Resources\Styles\Styles.xaml
 
+[C:/Users/artur/source/repos/BarberApp/BarberApp/Views/AdminAppointmentsPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = BarberApp.Views.AdminAppointmentsPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\AdminAppointmentsPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\AdminAppointmentsPage.xaml
+
+[C:/Users/artur/source/repos/BarberApp/BarberApp/Views/AdminClientsPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = BarberApp.Views.AdminClientsPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\AdminClientsPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\AdminClientsPage.xaml
+
+[C:/Users/artur/source/repos/BarberApp/BarberApp/Views/AdminDashboardPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = BarberApp.Views.AdminDashboardPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\AdminDashboardPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\AdminDashboardPage.xaml
+
+[C:/Users/artur/source/repos/BarberApp/BarberApp/Views/AdminLoginPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = BarberApp.Views.AdminLoginPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\AdminLoginPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\AdminLoginPage.xaml
+
+[C:/Users/artur/source/repos/BarberApp/BarberApp/Views/AdminMastersPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = BarberApp.Views.AdminMastersPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\AdminMastersPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\AdminMastersPage.xaml
+
+[C:/Users/artur/source/repos/BarberApp/BarberApp/Views/AdminServicesPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = BarberApp.Views.AdminServicesPage.xaml
+build_metadata.AdditionalFiles.TargetPath = Views\AdminServicesPage.xaml
+build_metadata.AdditionalFiles.RelativePath = Views\AdminServicesPage.xaml
+
 [C:/Users/artur/source/repos/BarberApp/BarberApp/Views/HistoryPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = BarberApp.Views.HistoryPage.xaml

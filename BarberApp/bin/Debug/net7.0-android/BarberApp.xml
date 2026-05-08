@@ -4,6 +4,143 @@
         <name>BarberApp</name>
     </assembly>
     <members>
+        <member name="T:BarberApp.ViewModels.AdminAppointmentsViewModel">
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminAppointmentsViewModel.Items">
+            <inheritdoc cref="F:BarberApp.ViewModels.AdminAppointmentsViewModel._items"/>
+        </member>
+        <member name="F:BarberApp.ViewModels.AdminAppointmentsViewModel.goBackCommand">
+            <summary>The backing field for <see cref="P:BarberApp.ViewModels.AdminAppointmentsViewModel.GoBackCommand"/>.</summary>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminAppointmentsViewModel.GoBackCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:BarberApp.ViewModels.AdminAppointmentsViewModel.GoBackAsync"/>.</summary>
+        </member>
+        <member name="T:BarberApp.ViewModels.AdminClientsViewModel">
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminClientsViewModel.Clients">
+            <inheritdoc cref="F:BarberApp.ViewModels.AdminClientsViewModel._clients"/>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminClientsViewModel.SalonName">
+            <inheritdoc cref="F:BarberApp.ViewModels.AdminClientsViewModel._salonName"/>
+        </member>
+        <member name="F:BarberApp.ViewModels.AdminClientsViewModel.goBackCommand">
+            <summary>The backing field for <see cref="P:BarberApp.ViewModels.AdminClientsViewModel.GoBackCommand"/>.</summary>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminClientsViewModel.GoBackCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:BarberApp.ViewModels.AdminClientsViewModel.GoBackAsync"/>.</summary>
+        </member>
+        <member name="T:BarberApp.ViewModels.AdminDashboardViewModel">
+            <inheritdoc/>
+            <inheritdoc/>
+            <inheritdoc/>
+            <inheritdoc/>
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminDashboardViewModel.SalonName">
+            <inheritdoc cref="F:BarberApp.ViewModels.AdminDashboardViewModel._salonName"/>
+        </member>
+        <member name="F:BarberApp.ViewModels.AdminDashboardViewModel.openAppointmentsCommand">
+            <summary>The backing field for <see cref="P:BarberApp.ViewModels.AdminDashboardViewModel.OpenAppointmentsCommand"/>.</summary>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminDashboardViewModel.OpenAppointmentsCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:BarberApp.ViewModels.AdminDashboardViewModel.OpenAppointmentsAsync"/>.</summary>
+        </member>
+        <member name="F:BarberApp.ViewModels.AdminDashboardViewModel.openMastersCommand">
+            <summary>The backing field for <see cref="P:BarberApp.ViewModels.AdminDashboardViewModel.OpenMastersCommand"/>.</summary>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminDashboardViewModel.OpenMastersCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:BarberApp.ViewModels.AdminDashboardViewModel.OpenMastersAsync"/>.</summary>
+        </member>
+        <member name="F:BarberApp.ViewModels.AdminDashboardViewModel.openClientsCommand">
+            <summary>The backing field for <see cref="P:BarberApp.ViewModels.AdminDashboardViewModel.OpenClientsCommand"/>.</summary>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminDashboardViewModel.OpenClientsCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:BarberApp.ViewModels.AdminDashboardViewModel.OpenClientsAsync"/>.</summary>
+        </member>
+        <member name="F:BarberApp.ViewModels.AdminDashboardViewModel.openServicesCommand">
+            <summary>The backing field for <see cref="P:BarberApp.ViewModels.AdminDashboardViewModel.OpenServicesCommand"/>.</summary>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminDashboardViewModel.OpenServicesCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:BarberApp.ViewModels.AdminDashboardViewModel.OpenServicesAsync"/>.</summary>
+        </member>
+        <member name="F:BarberApp.ViewModels.AdminDashboardViewModel.logoutCommand">
+            <summary>The backing field for <see cref="P:BarberApp.ViewModels.AdminDashboardViewModel.LogoutCommand"/>.</summary>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminDashboardViewModel.LogoutCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:BarberApp.ViewModels.AdminDashboardViewModel.LogoutAsync"/>.</summary>
+        </member>
+        <member name="T:BarberApp.ViewModels.AdminLoginViewModel">
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminLoginViewModel.Login">
+            <inheritdoc cref="F:BarberApp.ViewModels.AdminLoginViewModel._login"/>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminLoginViewModel.Password">
+            <inheritdoc cref="F:BarberApp.ViewModels.AdminLoginViewModel._password"/>
+        </member>
+        <member name="F:BarberApp.ViewModels.AdminLoginViewModel.adminLoginCommand">
+            <summary>The backing field for <see cref="P:BarberApp.ViewModels.AdminLoginViewModel.AdminLoginCommand"/>.</summary>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminLoginViewModel.AdminLoginCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:BarberApp.ViewModels.AdminLoginViewModel.AdminLoginAsync"/>.</summary>
+        </member>
+        <member name="T:BarberApp.ViewModels.AdminMastersViewModel">
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminMastersViewModel.Masters">
+            <inheritdoc cref="F:BarberApp.ViewModels.AdminMastersViewModel._masters"/>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminMastersViewModel.SalonName">
+            <inheritdoc cref="F:BarberApp.ViewModels.AdminMastersViewModel._salonName"/>
+        </member>
+        <member name="F:BarberApp.ViewModels.AdminMastersViewModel.goBackCommand">
+            <summary>The backing field for <see cref="P:BarberApp.ViewModels.AdminMastersViewModel.GoBackCommand"/>.</summary>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminMastersViewModel.GoBackCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:BarberApp.ViewModels.AdminMastersViewModel.GoBackAsync"/>.</summary>
+        </member>
+        <member name="T:BarberApp.ViewModels.AdminServicesViewModel">
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminServicesViewModel.Services">
+            <inheritdoc cref="F:BarberApp.ViewModels.AdminServicesViewModel._services"/>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminServicesViewModel.SalonName">
+            <inheritdoc cref="F:BarberApp.ViewModels.AdminServicesViewModel._salonName"/>
+        </member>
+        <member name="F:BarberApp.ViewModels.AdminServicesViewModel.goBackCommand">
+            <summary>The backing field for <see cref="P:BarberApp.ViewModels.AdminServicesViewModel.GoBackCommand"/>.</summary>
+        </member>
+        <member name="P:BarberApp.ViewModels.AdminServicesViewModel.GoBackCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:BarberApp.ViewModels.AdminServicesViewModel.GoBackAsync"/>.</summary>
+        </member>
+        <member name="T:BarberApp.ViewModels.HistoryViewModel">
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="P:BarberApp.ViewModels.HistoryViewModel.Appointments">
+            <inheritdoc cref="F:BarberApp.ViewModels.HistoryViewModel._appointments"/>
+        </member>
+        <member name="P:BarberApp.ViewModels.HistoryViewModel.IsRefreshing">
+            <inheritdoc cref="F:BarberApp.ViewModels.HistoryViewModel._isRefreshing"/>
+        </member>
+        <member name="P:BarberApp.ViewModels.HistoryViewModel.EmptyMessage">
+            <inheritdoc cref="F:BarberApp.ViewModels.HistoryViewModel._emptyMessage"/>
+        </member>
+        <member name="F:BarberApp.ViewModels.HistoryViewModel.refreshCommand">
+            <summary>The backing field for <see cref="P:BarberApp.ViewModels.HistoryViewModel.RefreshCommand"/>.</summary>
+        </member>
+        <member name="P:BarberApp.ViewModels.HistoryViewModel.RefreshCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:BarberApp.ViewModels.HistoryViewModel.RefreshAsync"/>.</summary>
+        </member>
         <member name="T:BarberApp.ViewModels.HomeViewModel">
             <inheritdoc/>
             <inheritdoc/>
@@ -177,6 +314,36 @@
             for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
             </summary>
         </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Items">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Items" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Clients">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Clients" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SalonName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SalonName" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Login">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Login" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Password">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Password" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Masters">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Masters" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Services">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Services" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Appointments">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Appointments" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsRefreshing">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsRefreshing" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.EmptyMessage">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "EmptyMessage" generated properties.</summary>
+        </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Shops">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Shops" generated properties.</summary>
         </member>
@@ -203,12 +370,6 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedDate">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedDate" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Login">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Login" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Password">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Password" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Name">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Name" generated properties.</summary>
@@ -255,6 +416,36 @@
             for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
             </summary>
         </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Items">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Items" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Clients">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Clients" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SalonName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SalonName" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Login">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Login" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Password">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Password" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Masters">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Masters" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Services">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Services" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Appointments">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Appointments" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsRefreshing">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsRefreshing" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.EmptyMessage">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "EmptyMessage" generated properties.</summary>
+        </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Shops">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Shops" generated properties.</summary>
         </member>
@@ -281,12 +472,6 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedDate">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedDate" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Login">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Login" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Password">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Password" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Name">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Name" generated properties.</summary>

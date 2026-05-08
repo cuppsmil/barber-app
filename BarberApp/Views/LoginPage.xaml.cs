@@ -89,4 +89,6 @@ public partial class LoginPage : ContentPage
         RegisterMode.IsVisible = !_isLoginMode;
         ErrorLabel.IsVisible = false;
     }
+    private void OnAdminLoginClicked(object s, EventArgs e) =>
+    Application.Current!.MainPage = new NavigationPage(new AdminLoginPage());
 }

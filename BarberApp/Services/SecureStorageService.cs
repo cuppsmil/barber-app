@@ -66,4 +66,33 @@ public class SecureStorageService
             Application.Current.MainPage = new NavigationPage(new LoginPage());
         }
     }
+
+    // === АДМИН: СОХРАНЕНИЕ ===
+    public async Task SaveAdminCredentialsAsync(int adminId, int salonId, string login)
+    {
+        await SecureStorage.Default.SetAsync("admin_id", adminId.ToString());
+        await SecureStorage.Default.SetAsync("admin_salon_id", salonId.ToString());
+        await SecureStorage.Default.SetAsync("admin_login", login);
+    }
+
+    // === АДМИН: ЧТЕНИЕ ===
+    public async Task<int?> GetAdminIdAsync()
+    {
+        var val = await SecureStorage.Default.GetAsync("admin_id");
+        return int.TryParse(val, out var id) ? id : null;
+    }
+
+    public async Task<int?> GetAdminSalonIdAsync()
+    {
+        var val = await SecureStorage.Default.GetAsync("admin_salon_id");
+        return int.TryParse(val, out var id) ? id : null;
+    }
+
+    // === АДМИН: ВЫХОД ===
+    public async Task ClearAdminCredentialsAsync()
+    {
+        SecureStorage.Default.Remove("admin_id");
+        SecureStorage.Default.Remove("admin_salon_id");
+        SecureStorage.Default.Remove("admin_login");
+    }
 }

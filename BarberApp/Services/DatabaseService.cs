@@ -390,4 +390,122 @@ public class DatabaseService
             row.login ?? "Не указан"
         );
     }
+    // === АДМИН: ВХОД ===
+    public async Task<(int Id, int SalonId)?> GetAdminAsync(string login, string password)
+    {
+        using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var row = await connection.QueryFirstOrDefaultAsync(@"
+        SELECT id, salon_id FROM admin WHERE login = @Login AND password_hash = @Password",
+            new { Login = login, Password = password });
+
+        return row == null ? null : (row.id, row.salon_id);
+    }
+
+    // === АДМИН: ЗАПИСИ САЛОНА ===
+    public async Task<List<AppointmentItem>> GetSalonAppointmentsAsync(int salonId)
+    {
+        System.Diagnostics.Debug.WriteLine($">>> Загрузка записей для салона {salonId}");
+
+        using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var sql = @"
+        SELECT 
+            a.id,
+            a.date,
+            c.name as client_name,
+            m.fio as master_name,
+            srv.name as service_name
+        FROM appointments a
+        JOIN master m ON a.master_id = m.id
+        JOIN salontomaster stm ON m.id = stm.master_id
+        JOIN client c ON a.client_id = c.id
+        JOIN service srv ON a.service_id = srv.id
+        WHERE stm.salon_id = @SalonId
+        ORDER BY a.date DESC";
+
+        try
+        {
+            var rows = await connection.QueryAsync(sql, new { SalonId = salonId });
+            var items = new List<AppointmentItem>();
+
+            foreach (var row in rows)
+            {
+                System.Diagnostics.Debug.WriteLine($">>> Row: id={row.id}, date={row.date}, client={row.client_name}, master={row.master_name}");
+
+                items.Add(new AppointmentItem
+                {
+                    Id = row.id,
+                    Date = row.date,
+                    MasterName = row.client_name ?? "Клиент",
+                    SalonName = row.master_name ?? "Мастер",
+                    ServiceName = row.service_name ?? "Услуга"
+                });
+            }
+
+            System.Diagnostics.Debug.WriteLine($">>> Всего записей: {items.Count}");
+            return items;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($">>> ОШИБКА: {ex.Message}");
+            return new List<AppointmentItem>();
+        }
+    }
+
+    // === АДМИН: МАСТЕРА САЛОНА ===
+    public async Task<List<Master>> GetSalonMastersAsync(int salonId)
+    {
+        using var connection = CreateConnection();
+        await connection.OpenAsync();
+        return (await connection.QueryAsync<Master>(@"
+        SELECT m.id, m.fio, m.phone, m.passport, m.grade 
+        FROM master m
+        JOIN salontomaster stm ON m.id = stm.master_id
+        WHERE stm.salon_id = @SalonId", new { SalonId = salonId })).ToList();
+    }
+
+    // === АДМИН: КЛИЕНТЫ САЛОНА ===
+    public async Task<List<SalonClient>> GetSalonClientsAsync(int salonId)
+    {
+        using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var sql = @"
+        SELECT DISTINCT 
+            c.id, 
+            c.name AS Name, 
+            c.phone AS Phone, 
+            c.login AS Login
+        FROM client c
+        JOIN appointments a ON c.id = a.client_id
+        JOIN master m ON a.master_id = m.id
+        JOIN salontomaster stm ON m.id = stm.master_id
+        WHERE stm.salon_id = @SalonId
+        ORDER BY c.name";
+
+        return (await connection.QueryAsync<SalonClient>(sql, new { SalonId = salonId })).ToList();
+    }
+
+    // === АДМИН: УСЛУГИ САЛОНА ===
+    public async Task<List<ServiceItem>> GetSalonServicesAsync(int salonId)
+    {
+        using var connection = CreateConnection();
+        await connection.OpenAsync();
+        return (await connection.QueryAsync<ServiceItem>(@"
+        SELECT DISTINCT s.id, s.name, s.duration, s.description
+        FROM service s
+        JOIN mastertoservice mts ON s.id = mts.service_id
+        JOIN master m ON mts.master_id = m.id
+        JOIN salontomaster stm ON m.id = stm.master_id
+        WHERE stm.salon_id = @SalonId
+        ORDER BY s.name", new { SalonId = salonId })).ToList();
+    }
+    public async Task<Salon?> GetSalonAsync(int id)
+    {
+        using var c = CreateConnection(); await c.OpenAsync();
+        return await c.QueryFirstOrDefaultAsync<Salon>("SELECT * FROM salon WHERE id = @Id", new { Id = id });
+    }
 }

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BarberApp.ViewModels"
+             xmlns:models="clr-namespace:BarberApp.Models"
+             x:Class="BarberApp.Views.AdminAppointmentsPage"
+             Title="Записи салона"
+             BackgroundColor="#F9FAFB">
+
+    <ContentPage.BindingContext>
+        <vm:AdminAppointmentsViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Frame Grid.Row="0" BackgroundColor="White" Padding="16" HasShadow="True">
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0" 
+                       Text="Записи салона" 
+                       FontSize="20" 
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center"/>
+                <Button Grid.Column="1"
+                        Text="Назад" 
+                        BackgroundColor="#6B46C1"
+                        TextColor="White"
+                        CornerRadius="8"
+                        Padding="16,8"
+                        Command="{Binding GoBackCommand}"/>
+            </Grid>
+        </Frame>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Items}" Margin="16">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:AppointmentItem">
+                    <Frame BackgroundColor="White" Margin="0,0,0,12" Padding="16" CornerRadius="12" BorderColor="#E5E7EB" HasShadow="True">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{Binding Date, StringFormat='Дата и время: {0:dd.MM.yyyy HH:mm}'}" 
+                                   FontAttributes="Bold" FontSize="16" TextColor="#6B46C1"/>
+                            <BoxView HeightRequest="1" BackgroundColor="#F3F4F6"/>
+
+                            <Label Text="Клиент" FontSize="12" TextColor="#6B7280"/>
+                            <Label Text="{Binding MasterName}" FontSize="15" FontAttributes="Bold" TextColor="#111827"/>
+
+                            <Label Text="Мастер" FontSize="12" TextColor="#6B7280" Margin="0,6,0,0"/>
+                            <Label Text="{Binding SalonName}" FontSize="15" TextColor="#374151"/>
+
+                            <Label Text="Услуга" FontSize="12" TextColor="#6B7280" Margin="0,6,0,0"/>
+                            <Label Text="{Binding ServiceName}" FontSize="15" TextColor="#374151"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

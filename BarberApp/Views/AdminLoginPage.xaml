@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BarberApp.ViewModels"
+             x:Class="BarberApp.Views.AdminLoginPage"
+             BackgroundColor="White" Title="Вход администратора">
+    <ContentPage.BindingContext>
+        <vm:AdminLoginViewModel />
+    </ContentPage.BindingContext>
+    <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+        <Label Text="👑 Админ-панель" FontSize="28" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+        <Entry Placeholder="Логин" Text="{Binding Login}" BackgroundColor="#F3F4F6" HeightRequest="50"/>
+        <Entry Placeholder="Пароль" Text="{Binding Password}" IsPassword="True" BackgroundColor="#F3F4F6" HeightRequest="50"/>
+        <Button Text="Войти" BackgroundColor="#1F2937" TextColor="White" CornerRadius="12" Command="{Binding AdminLoginCommand}"/>
+        <Button Text="← Назад к клиентам" BackgroundColor="Transparent" TextColor="#6B7280" Clicked="OnBackClicked"/>
+    </VerticalStackLayout>
+</ContentPage>
