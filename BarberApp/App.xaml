@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BarberApp.App"
+             xmlns:converters="clr-namespace:BarberApp.Converters">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <converters:NotNullConverter x:Key="NotNullConverter" />
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <converters:InvertedNullConverter x:Key="InvertedNullConverter" />
+            <converters:TimeSlotColorConverter x:Key="TimeSlotColorConverter" />
+           
+            <converters:ServiceHighlightConverter x:Key="ServiceHighlightConverter" />
+            <converters:ServiceTextColorConverter x:Key="ServiceTextColorConverter" />
+            <converters:MasterBorderColorConverter x:Key="MasterBorderColorConverter" />
+            <converters:MasterBorderWidthConverter x:Key="MasterBorderWidthConverter" />
+            <converters:MasterBackgroundConverter x:Key="MasterBackgroundConverter" />
+            <converters:ServiceBorderColorConverter x:Key="ServiceBorderColorConverter" />
+            <converters:ServiceBorderWidthConverter x:Key="ServiceBorderWidthConverter" />
+            <converters:ServiceBackgroundConverter x:Key="ServiceBackgroundConverter" />
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

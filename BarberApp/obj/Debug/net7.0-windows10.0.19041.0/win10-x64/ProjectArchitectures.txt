@@ -1,0 +1,1 @@
+C:\Users\artur\source\repos\BarberApp\BarberApp\BarberApp.csproj;x64

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:BarberApp.ViewModels"
+             xmlns:models="clr-namespace:BarberApp.Models"
+             x:Class="BarberApp.Views.ProfilePage"
+             BackgroundColor="#F9FAFB"
+             Title="Кабинет">
+
+    <ContentPage.BindingContext>
+        <vm:ProfileViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="20">
+
+            <!-- 🔧 ТЕСТОВЫЙ БЛОК (удалишь потом) -->
+            <Frame BackgroundColor="Yellow" Padding="10" CornerRadius="8" Margin="0,0,0,20" BorderColor="Red">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="🔧 ОТЛАДКА:" FontAttributes="Bold" TextColor="Red" FontSize="16"/>
+                    <Label Text="{Binding UserName, StringFormat='👤 Имя: {0}'}" TextColor="Black"/>
+                    <Label Text="{Binding UserLogin, StringFormat='🔑 Логин: {0}'}" TextColor="Black"/>
+                    <Label Text="{Binding UserPhone, StringFormat='📱 Телефон: {0}'}" TextColor="Black"/>
+                    <Label Text="{Binding History.Count, StringFormat='📅 Записей: {0}'}" TextColor="Black"/>
+                    <Label Text="{Binding Favorites.Count, StringFormat='❤️ Избранное: {0}'}" TextColor="Black"/>
+                </VerticalStackLayout>
+            </Frame>
+            <!-- КОНЕЦ ТЕСТОВОГО БЛОКА -->
+
+            <!-- Шапка -->
+            <Grid ColumnDefinitions="*, Auto" Margin="0,10,0,20">
+                <VerticalStackLayout Grid.Column="0">
+                    <Label Text="{Binding UserName}" FontSize="26" FontAttributes="Bold" TextColor="#111827"/>
+                    <Label Text="{Binding UserPhone}" FontSize="14" TextColor="#6B7280" Margin="0,4,0,0"/>
+                </VerticalStackLayout>
+
+                <ImageButton Grid.Column="1"
+                             Source="gear.png" 
+                             WidthRequest="40" HeightRequest="40"
+                             BackgroundColor="Transparent"
+                             Command="{Binding ToggleEditFormCommand}"
+                             VerticalOptions="Start"/>
+            </Grid>
+
+            <!-- Форма редактирования -->
+            <Frame CornerRadius="16" Padding="16" BorderColor="#6B46C1" BackgroundColor="White"
+                   IsVisible="{Binding IsEditFormVisible}" HasShadow="True">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="✏️ Изменить данные" FontSize="18" FontAttributes="Bold" TextColor="#6B46C1"/>
+
+                    <Entry Placeholder="Новый логин" Text="{Binding EditLogin}" BackgroundColor="#F3F4F6" HeightRequest="45"/>
+                    <Entry Placeholder="Новый пароль" Text="{Binding EditPassword}" IsPassword="True" BackgroundColor="#F3F4F6" HeightRequest="45"/>
+                    <Entry Placeholder="Повторите пароль" Text="{Binding ConfirmPassword}" IsPassword="True" BackgroundColor="#F3F4F6" HeightRequest="45"/>
+
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
+                        <Button Text="Отмена" BackgroundColor="#E5E7EB" TextColor="#374151" Command="{Binding ToggleEditFormCommand}"/>
+                        <Button Text="Сохранить" BackgroundColor="#6B46C1" TextColor="White" Command="{Binding SaveProfileChangesCommand}"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Избранные мастера -->
+            <VerticalStackLayout>
+                <Label Text="❤️ Избранные мастера" FontSize="18" FontAttributes="Bold" TextColor="#111827"/>
+
+                <CollectionView ItemsSource="{Binding Favorites}" HeightRequest="140">
+                    <CollectionView.EmptyView>
+                        <Label Text="Нажмите на ❤️ на главной, чтобы добавить" 
+                               TextColor="#9CA3AF" 
+                               HorizontalTextAlignment="Center" 
+                               VerticalTextAlignment="Center" 
+                               HeightRequest="60"/>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="12"/>
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Master">
+                            <Frame CornerRadius="12" Padding="12" WidthRequest="150" BorderColor="#E5E7EB" BackgroundColor="White">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="{Binding Fio}" FontAttributes="Bold" FontSize="14" LineBreakMode="WordWrap" MaxLines="2"/>
+                                    <Label Text="{Binding Grade}" FontSize="12" TextColor="#6B46C1"/>
+                                    <Button Text="Удалить" FontSize="11" BackgroundColor="#FEE2E2" TextColor="#DC2626" CornerRadius="8"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=RemoveFromFavoritesCommand}" 
+                                            CommandParameter="{Binding .}"/>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <!-- История записей -->
+            <VerticalStackLayout>
+                <Label Text="📅 История записей" FontSize="18" FontAttributes="Bold" TextColor="#111827"/>
+
+                <CollectionView ItemsSource="{Binding History}">
+                    <CollectionView.EmptyView>
+                        <Label Text="Пока нет записей" 
+                               TextColor="#9CA3AF" 
+                               HorizontalTextAlignment="Center" 
+                               VerticalTextAlignment="Center" 
+                               HeightRequest="60"/>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:AppointmentItem">
+                            <Frame CornerRadius="12" Padding="12" Margin="0,0,0,10" BorderColor="#E5E7EB" BackgroundColor="White">
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <Label Text="📅" FontSize="24" VerticalOptions="Center"/>
+                                    <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" VerticalOptions="Center">
+                                        <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy HH:mm}'}" FontAttributes="Bold" TextColor="#6B46C1" FontSize="14"/>
+                                        <Label Text="{Binding SalonName}" FontSize="13" TextColor="#374151"/>
+                                        <Label Text="{Binding MasterName}" FontSize="12" TextColor="#6B7280"/>
+                                        <Label Text="{Binding ServiceName}" FontSize="12" TextColor="#6B7280"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

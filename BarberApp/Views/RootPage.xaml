@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:BarberApp.Views"
+             x:Class="BarberApp.Views.RootPage"
+             Title="BarberApp"
+             BackgroundColor="White">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <!-- Контейнер для страниц -->
+        <Grid x:Name="PagesContainer">
+            <views:HomePage x:Name="HomePageView" IsVisible="True" />
+            <views:ProfilePage x:Name="ProfilePageView" IsVisible="False" />
+            <views:HistoryPage x:Name="HistoryPageView" IsVisible="False" />
+        </Grid>
+
+        <!-- Нижняя навигация -->
+        <Frame Grid.Row="1"
+               BackgroundColor="#F9FAFB"
+               HasShadow="True"
+               CornerRadius="0"
+               Padding="0,8,0,16">
+
+            <Grid ColumnDefinitions="*,*,*">
+
+                <!-- Барбершопы -->
+                <VerticalStackLayout Grid.Column="0" 
+                                     HorizontalOptions="Center"
+                                     Padding="8">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBarbershopsTabSelected"/>
+                    </VerticalStackLayout.GestureRecognizers>
+
+                    <Label Text="🏠" FontSize="24" x:Name="BarbershopsIcon"/>
+                    <Label Text="Барбершопы" 
+                           FontSize="12"
+                           x:Name="BarbershopsLabel"
+                           TextColor="Purple"
+                           Margin="0,4,0,0"/>
+                </VerticalStackLayout>
+
+                <!-- Профиль -->
+                <VerticalStackLayout Grid.Column="1" 
+                                     HorizontalOptions="Center"
+                                     Padding="8">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnProfileTabSelected"/>
+                    </VerticalStackLayout.GestureRecognizers>
+
+                    <Label Text="👤" FontSize="24" x:Name="ProfileIcon"/>
+                    <Label Text="Кабинет" 
+                           FontSize="12"
+                           x:Name="ProfileLabel"
+                           TextColor="#666666"
+                           Margin="0,4,0,0"/>
+                </VerticalStackLayout>
+
+                <!-- История -->
+                <VerticalStackLayout Grid.Column="2" 
+                                     HorizontalOptions="Center"
+                                     Padding="8">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHistoryTabSelected"/>
+                    </VerticalStackLayout.GestureRecognizers>
+
+                    <Label Text="" FontSize="24" x:Name="HistoryIcon"/>
+                    <Label Text="История" 
+                           FontSize="12"
+                           x:Name="HistoryLabel"
+                           TextColor="#666666"
+                           Margin="0,4,0,0"/>
+                </VerticalStackLayout>
+
+            </Grid>
+        </Frame>
+
+    </Grid>
+
+</ContentPage>
