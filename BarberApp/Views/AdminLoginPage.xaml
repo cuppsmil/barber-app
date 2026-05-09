@@ -8,7 +8,7 @@
         <vm:AdminLoginViewModel />
     </ContentPage.BindingContext>
     <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
-        <Label Text="👑 Админ-панель" FontSize="28" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+        <Label Text="Админ-панель" FontSize="28" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
         <Entry Placeholder="Логин" Text="{Binding Login}" BackgroundColor="#F3F4F6" HeightRequest="50"/>
         <Entry Placeholder="Пароль" Text="{Binding Password}" IsPassword="True" BackgroundColor="#F3F4F6" HeightRequest="50"/>
         <Button Text="Войти" BackgroundColor="#1F2937" TextColor="White" CornerRadius="12" Command="{Binding AdminLoginCommand}"/>

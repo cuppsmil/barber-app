@@ -14,12 +14,15 @@ public partial class ProfileViewModel : ObservableObject
 
     [ObservableProperty] private ObservableCollection<AppointmentItem> _history = new();
     [ObservableProperty] private ObservableCollection<Master> _favorites = new();
+
     [ObservableProperty] private string _userName = "Загрузка...";
     [ObservableProperty] private string _userPhone = "";
     [ObservableProperty] private string _userLogin = "";
+
+    // ✅ ИЗМЕНЯЕМЫЕ ПОЛЯ
     [ObservableProperty] private bool _isEditFormVisible = false;
-    [ObservableProperty] private string _editLogin = "";
-    [ObservableProperty] private string _editPassword = "";
+    [ObservableProperty] private string _editName = "";
+    [ObservableProperty] private string _editPassword = "";  // ⚠️ Передаётся как есть, хэшируется в DatabaseService
     [ObservableProperty] private string _confirmPassword = "";
 
     public ProfileViewModel()
@@ -27,12 +30,11 @@ public partial class ProfileViewModel : ObservableObject
         _dbService = new DatabaseService();
         _storage = new SecureStorageService();
 
-        Debug.WriteLine("🟢 ProfileViewModel создан");
+        Debug.WriteLine("✅ ProfileViewModel создан");
 
-        // ✅ АВТО-ОБНОВЛЕНИЕ ПОСЛЕ ЗАПИСИ
         MessagingCenter.Subscribe<HomeViewModel>(this, "RefreshProfile", async (sender) =>
         {
-            Debug.WriteLine("📨 Получено сообщение RefreshProfile -> обновляем данные");
+            Debug.WriteLine("📨 ProfileViewModel получил RefreshProfile");
             await RefreshAsync();
         });
 
@@ -47,7 +49,7 @@ public partial class ProfileViewModel : ObservableObject
             UserName = "Загрузка...";
 
             var clientId = await _storage.GetClientIdAsync();
-            Debug.WriteLine($"🔵 ClientId из хранилища: {clientId?.ToString() ?? "null"}");
+            Debug.WriteLine($"🔵 ClientId: {clientId?.ToString() ?? "null"}");
 
             if (!clientId.HasValue || clientId.Value == 0)
             {
@@ -59,18 +61,16 @@ public partial class ProfileViewModel : ObservableObject
             UserName = info.Name;
             UserPhone = info.Phone;
             UserLogin = info.Login;
-            EditLogin = info.Login;
+            EditName = info.Name;
 
-            // История
             var hist = await _dbService.GetClientHistoryAsync(clientId.Value);
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 History.Clear();
                 foreach (var h in hist) History.Add(h);
-                Debug.WriteLine($" Записей в истории: {History.Count}");
+                Debug.WriteLine($" Записей: {History.Count}");
             });
 
-            // Избранное
             var favs = await _dbService.GetFavoritesAsync(clientId.Value);
             MainThread.BeginInvokeOnMainThread(() =>
             {
@@ -81,7 +81,7 @@ public partial class ProfileViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"🔴 ОШИБКА LoadData: {ex.Message}");
+            Debug.WriteLine($"🔴 Ошибка LoadData: {ex.Message}");
             UserName = $"Ошибка: {ex.Message}";
         }
     }
@@ -92,26 +92,75 @@ public partial class ProfileViewModel : ObservableObject
         LoadData();
     }
 
-    [RelayCommand] private void ToggleEditForm() => IsEditFormVisible = !IsEditFormVisible;
+    [RelayCommand]
+    private void ToggleEditForm()
+    {
+        IsEditFormVisible = !IsEditFormVisible;
+        if (!IsEditFormVisible)
+        {
+            EditPassword = "";
+            ConfirmPassword = "";
+        }
+    }
 
     [RelayCommand]
     private async Task SaveProfileChangesAsync()
     {
-        if (string.IsNullOrWhiteSpace(EditLogin)) { await Application.Current.MainPage.DisplayAlert("Ошибка", "Введите логин", "OK"); return; }
-        if (!string.IsNullOrWhiteSpace(EditPassword) && EditPassword != ConfirmPassword) { await Application.Current.MainPage.DisplayAlert("Ошибка", "Пароли не совпадают", "OK"); return; }
+        Debug.WriteLine("💾 SaveProfileChangesAsync вызван");
+
+        // ✅ ПРОВЕРКА ИМЕНИ
+        if (string.IsNullOrWhiteSpace(EditName))
+        {
+            await Application.Current.MainPage.DisplayAlert("Ошибка", "Введите имя", "OK");
+            return;
+        }
+
+        // ✅ ПРОВЕРКА ПАРОЛЯ (если вводится)
+        if (!string.IsNullOrWhiteSpace(EditPassword))
+        {
+            if (EditPassword.Length < 6)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ошибка", "Пароль должен содержать минимум 6 символов", "OK");
+                return;
+            }
+
+            if (EditPassword != ConfirmPassword)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ошибка", "Пароли не совпадают", "OK");
+                return;
+            }
+            Debug.WriteLine(">> Пароль прошёл валидацию (будет захэширован в DatabaseService)");
+        }
 
         var clientId = await _storage.GetClientIdAsync();
         if (clientId == null) return;
 
-        string? newPassword = string.IsNullOrWhiteSpace(EditPassword) ? null : EditPassword;
-        await _dbService.UpdateCredentialsAsync(clientId.Value, EditLogin, newPassword);
-        await _storage.UpdateCredentialsAsync(login: EditLogin, password: newPassword);
+        try
+        {
+            // ✅ ПАРОЛЬ ПЕРЕДАЁТСЯ "КАК ЕСТЬ" — DatabaseService сам захэширует
+            string? newPassword = string.IsNullOrWhiteSpace(EditPassword) ? null : EditPassword;
 
-        UserLogin = EditLogin;
-        IsEditFormVisible = false;
-        EditPassword = "";
-        ConfirmPassword = "";
-        await Application.Current.MainPage.DisplayAlert("Успех", "Данные сохранены", "OK");
+            Debug.WriteLine($">> Вызов UpdateClientProfileAsync: clientId={clientId.Value}, newName={EditName}, newPassword={(newPassword == null ? "null" : "есть")}");
+
+            await _dbService.UpdateClientProfileAsync(clientId.Value, EditName, newPassword);
+
+            // ✅ В SECURE STORAGE НЕ ХРАНИМ ПАРОЛЬ! Только имя
+            await _storage.UpdateCredentialsAsync(name: EditName);
+
+            UserName = EditName;
+
+            IsEditFormVisible = false;
+            EditPassword = "";
+            ConfirmPassword = "";
+
+            Debug.WriteLine("✅ Профиль успешно обновлён");
+            await Application.Current.MainPage.DisplayAlert("Успех", "Данные сохранены", "OK");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"❌ Ошибка обновления профиля: {ex.Message}");
+            await Application.Current.MainPage.DisplayAlert("Ошибка", ex.Message, "OK");
+        }
     }
 
     [RelayCommand]
@@ -119,6 +168,7 @@ public partial class ProfileViewModel : ObservableObject
     {
         var clientId = await _storage.GetClientIdAsync();
         if (clientId == null) return;
+
         await _dbService.ToggleFavoriteAsync(clientId.Value, master.Id, false);
         await RefreshAsync();
     }

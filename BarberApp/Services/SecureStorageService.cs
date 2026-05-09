@@ -1,98 +1,101 @@
-﻿using BarberApp.Views; // ✅ Для LoginPage
+﻿using System.Diagnostics;
 
 namespace BarberApp.Services;
 
 public class SecureStorageService
 {
-    private const string ClientIdKey = "client_id";
-    private const string ClientNameKey = "client_name";
-    private const string ClientLoginKey = "client_login";
-    private const string ClientPhoneKey = "client_phone";
-    private const string ClientPasswordKey = "client_password";
+    // === КЛЮЧИ ДЛЯ КЛИЕНТОВ ===
+    private const string KeyClientId = "client_id";
+    private const string KeyClientName = "client_name";
+    private const string KeyClientPhone = "client_phone";
+    private const string KeyClientLogin = "client_login";
+    private const string KeyClientPassword = "client_password";
 
-    // ✅ Добавлен параметр 'phone'
+    // === КЛЮЧИ ДЛЯ АДМИНОВ ===
+    private const string KeyAdminId = "admin_id";
+    private const string KeyAdminSalonId = "admin_salon_id";
+    private const string KeyAdminLogin = "admin_login";
+
+    // ==================== КЛИЕНТСКИЕ МЕТОДЫ ====================
+
     public async Task SaveCredentialsAsync(int clientId, string name, string login, string phone, string password)
     {
-        await SecureStorage.Default.SetAsync(ClientIdKey, clientId.ToString());
-        await SecureStorage.Default.SetAsync(ClientNameKey, name);
-        await SecureStorage.Default.SetAsync(ClientLoginKey, login);
-        await SecureStorage.Default.SetAsync(ClientPhoneKey, phone); // ✅ Теперь phone существует
-        await SecureStorage.Default.SetAsync(ClientPasswordKey, password);
-    }
+        await SecureStorage.Default.SetAsync(KeyClientId, clientId.ToString());
+        await SecureStorage.Default.SetAsync(KeyClientName, name);
+        await SecureStorage.Default.SetAsync(KeyClientLogin, login);
+        await SecureStorage.Default.SetAsync(KeyClientPhone, phone);
+        await SecureStorage.Default.SetAsync(KeyClientPassword, password);
 
-    public async Task UpdateCredentialsAsync(string? name = null, string? login = null, string? password = null)
-    {
-        if (!string.IsNullOrEmpty(name))
-            await SecureStorage.Default.SetAsync(ClientNameKey, name);
-        if (!string.IsNullOrEmpty(login))
-            await SecureStorage.Default.SetAsync(ClientLoginKey, login);
-        if (!string.IsNullOrEmpty(password))
-            await SecureStorage.Default.SetAsync(ClientPasswordKey, password);
+        Debug.WriteLine($">> 🔐 Клиент сохранён: clientId={clientId}, login={login}");
     }
 
     public async Task<int?> GetClientIdAsync()
     {
-        var idStr = await SecureStorage.Default.GetAsync(ClientIdKey);
-        if (int.TryParse(idStr, out var id))
-            return id;
-        return null;
+        var val = await SecureStorage.Default.GetAsync(KeyClientId);
+        return int.TryParse(val, out var id) ? id : null;
     }
 
-    public async Task<string?> GetClientNameAsync() => await SecureStorage.Default.GetAsync(ClientNameKey);
-    public async Task<string?> GetClientLoginAsync() => await SecureStorage.Default.GetAsync(ClientLoginKey);
-    public async Task<string?> GetClientPhoneAsync() => await SecureStorage.Default.GetAsync(ClientPhoneKey);
-    public async Task<string?> GetClientPasswordAsync() => await SecureStorage.Default.GetAsync(ClientPasswordKey);
+    public async Task<string?> GetClientNameAsync() => await SecureStorage.Default.GetAsync(KeyClientName);
+    public async Task<string?> GetClientPhoneAsync() => await SecureStorage.Default.GetAsync(KeyClientPhone);
+    public async Task<string?> GetClientLoginAsync() => await SecureStorage.Default.GetAsync(KeyClientLogin);
 
-    public async Task<bool> IsAuthenticatedAsync()
+    public async Task UpdateCredentialsAsync(string? name = null, string? password = null)
     {
-        var clientId = await GetClientIdAsync();
-        return clientId.HasValue;
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            await SecureStorage.Default.SetAsync(KeyClientName, name);
+            Debug.WriteLine($">> 🔐 Обновлено имя: {name}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(password))
+        {
+            await SecureStorage.Default.SetAsync(KeyClientPassword, password);
+            Debug.WriteLine(">> 🔐 Обновлён пароль");
+        }
     }
 
     public async Task ClearCredentialsAsync()
     {
-        SecureStorage.Default.Remove(ClientIdKey);
-        SecureStorage.Default.Remove(ClientNameKey);
-        SecureStorage.Default.Remove(ClientLoginKey);
-        SecureStorage.Default.Remove(ClientPhoneKey);
-        SecureStorage.Default.Remove(ClientPasswordKey);
+        SecureStorage.Default.Remove(KeyClientId);
+        SecureStorage.Default.Remove(KeyClientName);
+        SecureStorage.Default.Remove(KeyClientPhone);
+        SecureStorage.Default.Remove(KeyClientLogin);
+        SecureStorage.Default.Remove(KeyClientPassword);
+
+        Debug.WriteLine(">> 🔓 Клиентские данные очищены");
     }
 
-    public async Task LogoutAsync()
-    {
-        await ClearCredentialsAsync();
-        if (Application.Current?.MainPage != null)
-        {
-            Application.Current.MainPage = new NavigationPage(new LoginPage());
-        }
-    }
+    // ==================== АДМИНСКИЕ МЕТОДЫ ====================
 
-    // === АДМИН: СОХРАНЕНИЕ ===
     public async Task SaveAdminCredentialsAsync(int adminId, int salonId, string login)
     {
-        await SecureStorage.Default.SetAsync("admin_id", adminId.ToString());
-        await SecureStorage.Default.SetAsync("admin_salon_id", salonId.ToString());
-        await SecureStorage.Default.SetAsync("admin_login", login);
+        await SecureStorage.Default.SetAsync(KeyAdminId, adminId.ToString());
+        await SecureStorage.Default.SetAsync(KeyAdminSalonId, salonId.ToString());
+        await SecureStorage.Default.SetAsync(KeyAdminLogin, login);
+
+        Debug.WriteLine($">> 🔐 Админ сохранён: adminId={adminId}, salonId={salonId}, login={login}");
     }
 
-    // === АДМИН: ЧТЕНИЕ ===
     public async Task<int?> GetAdminIdAsync()
     {
-        var val = await SecureStorage.Default.GetAsync("admin_id");
+        var val = await SecureStorage.Default.GetAsync(KeyAdminId);
         return int.TryParse(val, out var id) ? id : null;
     }
 
     public async Task<int?> GetAdminSalonIdAsync()
     {
-        var val = await SecureStorage.Default.GetAsync("admin_salon_id");
+        var val = await SecureStorage.Default.GetAsync(KeyAdminSalonId);
         return int.TryParse(val, out var id) ? id : null;
     }
 
-    // === АДМИН: ВЫХОД ===
+    public async Task<string?> GetAdminLoginAsync() => await SecureStorage.Default.GetAsync(KeyAdminLogin);
+
     public async Task ClearAdminCredentialsAsync()
     {
-        SecureStorage.Default.Remove("admin_id");
-        SecureStorage.Default.Remove("admin_salon_id");
-        SecureStorage.Default.Remove("admin_login");
+        SecureStorage.Default.Remove(KeyAdminId);
+        SecureStorage.Default.Remove(KeyAdminSalonId);
+        SecureStorage.Default.Remove(KeyAdminLogin);
+
+        Debug.WriteLine(">> 🔓 Админские данные очищены");
     }
 }

@@ -17,12 +17,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Frame Grid.Row="0" BackgroundColor="White" Padding="16" HasShadow="True">
-            <Grid ColumnDefinitions="*,Auto">
-                <Label Grid.Column="0" Text="Мастера салона" FontSize="20" FontAttributes="Bold" VerticalTextAlignment="Center"/>
-                <Button Grid.Column="1" Text="Назад" BackgroundColor="#6B46C1" TextColor="White" CornerRadius="8" Padding="16,8" Command="{Binding GoBackCommand}"/>
-            </Grid>
-        </Frame>
+        
 
         <CollectionView Grid.Row="1" ItemsSource="{Binding Masters}" Margin="16">
             <CollectionView.ItemTemplate>

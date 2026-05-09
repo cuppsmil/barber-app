@@ -14,8 +14,8 @@
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="20">
 
-            <!-- 🔧 ТЕСТОВЫЙ БЛОК (удалишь потом) -->
-            <Frame BackgroundColor="Yellow" Padding="10" CornerRadius="8" Margin="0,0,0,20" BorderColor="Red">
+            <!-- ТЕСТОВЫЙ БЛОК -->
+            <!--<Frame BackgroundColor="Yellow" Padding="10" CornerRadius="8" Margin="0,0,0,20" BorderColor="Red">
                 <VerticalStackLayout Spacing="4">
                     <Label Text="🔧 ОТЛАДКА:" FontAttributes="Bold" TextColor="Red" FontSize="16"/>
                     <Label Text="{Binding UserName, StringFormat='👤 Имя: {0}'}" TextColor="Black"/>
@@ -24,8 +24,8 @@
                     <Label Text="{Binding History.Count, StringFormat='📅 Записей: {0}'}" TextColor="Black"/>
                     <Label Text="{Binding Favorites.Count, StringFormat='❤️ Избранное: {0}'}" TextColor="Black"/>
                 </VerticalStackLayout>
-            </Frame>
-            <!-- КОНЕЦ ТЕСТОВОГО БЛОКА -->
+            </Frame>-->
+     
 
             <!-- Шапка -->
             <Grid ColumnDefinitions="*, Auto" Margin="0,10,0,20">
@@ -44,11 +44,14 @@
 
             <!-- Форма редактирования -->
             <Frame CornerRadius="16" Padding="16" BorderColor="#6B46C1" BackgroundColor="White"
-                   IsVisible="{Binding IsEditFormVisible}" HasShadow="True">
+       IsVisible="{Binding IsEditFormVisible}" HasShadow="True">
                 <VerticalStackLayout Spacing="12">
                     <Label Text="✏️ Изменить данные" FontSize="18" FontAttributes="Bold" TextColor="#6B46C1"/>
 
-                    <Entry Placeholder="Новый логин" Text="{Binding EditLogin}" BackgroundColor="#F3F4F6" HeightRequest="45"/>
+                    <!-- ✅ ТОЛЬКО ИМЯ -->
+                    <Entry Placeholder="Новое имя" Text="{Binding EditName}" BackgroundColor="#F3F4F6" HeightRequest="45"/>
+
+                    <!-- ✅ ПАРОЛЬ -->
                     <Entry Placeholder="Новый пароль" Text="{Binding EditPassword}" IsPassword="True" BackgroundColor="#F3F4F6" HeightRequest="45"/>
                     <Entry Placeholder="Повторите пароль" Text="{Binding ConfirmPassword}" IsPassword="True" BackgroundColor="#F3F4F6" HeightRequest="45"/>
 
@@ -61,7 +64,7 @@
 
             <!-- Избранные мастера -->
             <VerticalStackLayout>
-                <Label Text="❤️ Избранные мастера" FontSize="18" FontAttributes="Bold" TextColor="#111827"/>
+                <Label Text="Избранные мастера" FontSize="18" FontAttributes="Bold" TextColor="#111827"/>
 
                 <CollectionView ItemsSource="{Binding Favorites}" HeightRequest="140">
                     <CollectionView.EmptyView>
@@ -94,7 +97,7 @@
 
             <!-- История записей -->
             <VerticalStackLayout>
-                <Label Text="📅 История записей" FontSize="18" FontAttributes="Bold" TextColor="#111827"/>
+                <Label Text="История записей" FontSize="18" FontAttributes="Bold" TextColor="#111827"/>
 
                 <CollectionView ItemsSource="{Binding History}">
                     <CollectionView.EmptyView>
@@ -109,12 +112,13 @@
                         <DataTemplate x:DataType="models:AppointmentItem">
                             <Frame CornerRadius="12" Padding="12" Margin="0,0,0,10" BorderColor="#E5E7EB" BackgroundColor="White">
                                 <Grid ColumnDefinitions="Auto, *">
-                                    <Label Text="📅" FontSize="24" VerticalOptions="Center"/>
+                                    <Label Text="" FontSize="24" VerticalOptions="Center"/>
                                     <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" VerticalOptions="Center">
                                         <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy HH:mm}'}" FontAttributes="Bold" TextColor="#6B46C1" FontSize="14"/>
                                         <Label Text="{Binding SalonName}" FontSize="13" TextColor="#374151"/>
                                         <Label Text="{Binding MasterName}" FontSize="12" TextColor="#6B7280"/>
                                         <Label Text="{Binding ServiceName}" FontSize="12" TextColor="#6B7280"/>
+                                        <Label Text="{Binding Price, StringFormat='Стоимость: {0:N0} ₽'}" FontSize="12" TextColor="#059669" FontAttributes="Bold"/>
                                     </VerticalStackLayout>
                                 </Grid>
                             </Frame>
@@ -122,7 +126,18 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </VerticalStackLayout>
+            <!-- Кнопка выхода (в самом низу) -->
+            <Frame BackgroundColor="White" CornerRadius="12" Padding="0" HasShadow="True" Margin="0,20,0,0">
+                <Button Text="Выйти из аккаунта" 
+            BackgroundColor="#EF4444" 
+            TextColor="White" 
+            FontSize="16" 
+            CornerRadius="12"
+            HeightRequest="50"
+            Clicked="OnLogoutClicked"/>
+            </Frame>
 
         </VerticalStackLayout>
+        
     </ScrollView>
 </ContentPage>

@@ -32,7 +32,7 @@
                         <TapGestureRecognizer Tapped="OnBarbershopsTabSelected"/>
                     </VerticalStackLayout.GestureRecognizers>
 
-                    <Label Text="🏠" FontSize="24" x:Name="BarbershopsIcon"/>
+                    <Label Text="" FontSize="24" x:Name="BarbershopsIcon"/>
                     <Label Text="Барбершопы" 
                            FontSize="12"
                            x:Name="BarbershopsLabel"
@@ -48,7 +48,7 @@
                         <TapGestureRecognizer Tapped="OnProfileTabSelected"/>
                     </VerticalStackLayout.GestureRecognizers>
 
-                    <Label Text="👤" FontSize="24" x:Name="ProfileIcon"/>
+                    <Label Text="" FontSize="24" x:Name="ProfileIcon"/>
                     <Label Text="Кабинет" 
                            FontSize="12"
                            x:Name="ProfileLabel"

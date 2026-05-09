@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="BarberApp.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:BarberApp"
-    Shell.FlyoutBehavior="Disabled">
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:BarberApp.Views"
+       x:Class="BarberApp.AppShell"
+       Title="BarberApp"
+       BackgroundColor="#FFFFFF">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <!-- ✅ НАСТРОЙКИ TAB BAR -->
+    <Shell.Resources>
+        <ResourceDictionary>
+            <!-- Цвета -->
+            <Color x:Key="TabBarBackgroundColor">#FFFFFF</Color>
+            <Color x:Key="TabBarForegroundColor">#6B46C1</Color>
+            <Color x:Key="TabBarTitleColor">#6B7280</Color>
+            <Color x:Key="TabBarUnselectedColor">#9CA3AF</Color>
+
+            <!-- Тень для TabBar -->
+            <Shadow x:Key="TabBarShadow" Brush="#E5E7EB" Opacity="0.5" Offset="0,-2" Radius="8"/>
+
+            <!-- Стиль TabBar -->
+            <Style TargetType="TabBar">
+                <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource TabBarBackgroundColor}"/>
+                <Setter Property="Shell.TabBarForegroundColor" Value="{StaticResource TabBarForegroundColor}"/>
+                <Setter Property="Shell.TabBarTitleColor" Value="{StaticResource TabBarTitleColor}"/>
+                <Setter Property="Shell.TabBarUnselectedColor" Value="{StaticResource TabBarUnselectedColor}"/>
+                <Setter Property="Shell.Shadow" Value="{StaticResource TabBarShadow}"/>
+            </Style>
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <!-- 🔹 ГЛАВНАЯ - БАРБЕРШОПЫ -->
+    <TabBar>
+        <Tab Title="Барбершопы" Icon="home.jpg">
+            <ShellContent ContentTemplate="{DataTemplate views:RootPage}" Route="Home"/>
+        </Tab>
+
+        <Tab Title="Кабинет" Icon="person.jpg">
+            <ShellContent ContentTemplate="{DataTemplate views:ProfilePage}" Route="Profile"/>
+        </Tab>
+
+        <Tab Title="История" Icon="journal.jpg">
+            <ShellContent ContentTemplate="{DataTemplate views:HistoryPage}" Route="History"/>
+        </Tab>
+    </TabBar>
 
 </Shell>

@@ -14,7 +14,7 @@
             <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
             <converters:InvertedNullConverter x:Key="InvertedNullConverter" />
             <converters:TimeSlotColorConverter x:Key="TimeSlotColorConverter" />
-           
+            <converters:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
             <converters:ServiceHighlightConverter x:Key="ServiceHighlightConverter" />
             <converters:ServiceTextColorConverter x:Key="ServiceTextColorConverter" />
             <converters:MasterBorderColorConverter x:Key="MasterBorderColorConverter" />
@@ -23,6 +23,19 @@
             <converters:ServiceBorderColorConverter x:Key="ServiceBorderColorConverter" />
             <converters:ServiceBorderWidthConverter x:Key="ServiceBorderWidthConverter" />
             <converters:ServiceBackgroundConverter x:Key="ServiceBackgroundConverter" />
+
+            <Style TargetType="Shell" ApplyToDerivedTypes="True">
+                <Setter Property="Shell.BackgroundColor" Value="#FFFFFF"/>
+                <Setter Property="Shell.ForegroundColor" Value="#6B46C1"/>
+                <Setter Property="Shell.TitleColor" Value="#111827"/>
+                <Setter Property="Shell.DisabledColor" Value="#9CA3AF"/>
+                <Setter Property="Shell.UnselectedColor" Value="#9CA3AF"/>
+                <Setter Property="Shell.NavBarHasShadow" Value="False"/>
+                <Setter Property="Shell.TabBarBackgroundColor" Value="#FFFFFF"/>
+                <Setter Property="Shell.TabBarForegroundColor" Value="#6B46C1"/>
+                <Setter Property="Shell.TabBarTitleColor" Value="#6B46C1"/>
+                <Setter Property="Shell.TabBarUnselectedColor" Value="#9CA3AF"/>
+            </Style>
 
         </ResourceDictionary>
     </Application.Resources>

@@ -4,7 +4,6 @@
              xmlns:vm="clr-namespace:BarberApp.ViewModels"
              xmlns:models="clr-namespace:BarberApp.Models"
              xmlns:sys="clr-namespace:System;assembly=System.Runtime"
-             xmlns:converters="clr-namespace:BarberApp.Converters"
              x:Class="BarberApp.Views.HomePage"
              x:DataType="vm:HomeViewModel"
              BackgroundColor="White"
@@ -16,47 +15,27 @@
 
     <Grid>
         <ActivityIndicator x:Name="LoadingIndicator"
-                          IsRunning="False"
-                          IsVisible="False"
-                          Color="Purple"
-                          HorizontalOptions="Center"
-                          VerticalOptions="Center"/>
+                          IsRunning="False" IsVisible="False"
+                          Color="Purple" HorizontalOptions="Center" VerticalOptions="Center"/>
 
         <VerticalStackLayout x:Name="ErrorContainer"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center"
-                            Padding="20"
-                            IsVisible="False">
+                            HorizontalOptions="Center" VerticalOptions="Center"
+                            Padding="20" IsVisible="False">
             <Label Text="⚠️" FontSize="64"/>
-            <Label x:Name="ErrorLabel"
-                  HorizontalTextAlignment="Center"
-                  TextColor="Red"
-                  Margin="0,16,0,0"/>
-            <Button Text="Повторить"
-                   Clicked="OnRetryClicked"
-                   Margin="0,16,0,0"/>
+            <Label x:Name="ErrorLabel" HorizontalTextAlignment="Center" TextColor="Red" Margin="0,16,0,0"/>
+            <Button Text="Повторить" Clicked="OnRetryClicked" Margin="0,16,0,0"/>
         </VerticalStackLayout>
 
         <ScrollView x:Name="MainContent">
             <VerticalStackLayout Padding="16" Spacing="18">
 
-                <Label Text="Барбершопы города" 
-                      FontSize="28"
-                      FontAttributes="Bold"
-                      TextColor="#111827"
-                      Margin="0,0,0,12"/>
+                <Label Text="Барбершопы города" FontSize="28" FontAttributes="Bold" TextColor="#111827" Margin="0,0,0,12"/>
 
-                <CarouselView ItemsSource="{Binding Shops}"
-                             HeightRequest="170"
-                             CurrentItem="{Binding SelectedShop, Mode=TwoWay}"
-                             PeekAreaInsets="30,0">
+                <CarouselView ItemsSource="{Binding Shops}" HeightRequest="170"
+                             CurrentItem="{Binding SelectedShop, Mode=TwoWay}" PeekAreaInsets="30,0">
                     <CarouselView.ItemTemplate>
                         <DataTemplate x:DataType="models:BarberShop">
-                            <Frame CornerRadius="20"
-                                  Padding="0"
-                                  HasShadow="True"
-                                  BorderColor="#E5E7EB"
-                                  Margin="6,0">
+                            <Frame CornerRadius="20" Padding="0" HasShadow="True" BorderColor="#E5E7EB" Margin="6,0">
                                 <Grid>
                                     <Image Source="{Binding ImageUrl}" Aspect="AspectFill"/>
                                     <BoxView Color="Black" Opacity="0.4"/>
@@ -85,54 +64,33 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- ✅ ПЛАШКА СТАТУСА ВЫБОРА -->
-                <Frame CornerRadius="12" 
-                       Padding="12" 
-                       Margin="0,5,0,15" 
-                       BackgroundColor="#F3E8FF" 
-                       BorderColor="#D8B4FE"
-                       IsVisible="{Binding SelectedShop, Converter={x:Static converters:NotNullConverter.Instance}}">
+                <!-- СТАТУС ВЫБОРА -->
+                <!--<Frame CornerRadius="12" Padding="12" Margin="0,5,0,15" BackgroundColor="#F3E8FF" BorderColor="#D8B4FE">
                     <VerticalStackLayout Spacing="6">
-                        <Label Text=" Ваш выбор:" 
-                               FontSize="15" 
-                               FontAttributes="Bold" 
-                               TextColor="#6B46C1"/>
-
-                        <Label Text="{Binding SelectedMaster.Fio, StringFormat='👨‍🔧 Мастер: {0}'}" 
-                               FontSize="13" 
-                               TextColor="#111827"
-                               IsVisible="{Binding SelectedMaster, Converter={x:Static converters:NotNullConverter.Instance}}"/>
-
-                        <Label Text="{Binding SelectedService.DisplayText, StringFormat='✂️ Услуга: {0}'}" 
-                               FontSize="13" 
-                               TextColor="#111827"
-                               IsVisible="{Binding SelectedService, Converter={x:Static converters:NotNullConverter.Instance}}"/>
-
-                        <Label Text="{Binding SelectedTimeSlot.DisplayTime, StringFormat=' Время: {0}'}" 
-                               FontSize="13" 
-                               TextColor="#111827"
-                               IsVisible="{Binding SelectedTimeSlot, Converter={x:Static converters:NotNullConverter.Instance}}"/>
-
-                        <Label Text="👆 Нажмите на элементы выше, чтобы выбрать" 
-                               FontSize="12" 
-                               TextColor="#6B7280"
-                               IsVisible="{Binding SelectedMaster, Converter={x:Static converters:InvertedNullConverter.Instance}}"/>
+                        <Label Text="Ваш выбор:" FontSize="15" FontAttributes="Bold" TextColor="#6B46C1"/>
+                        <Label Text="{Binding SelectedMaster.Fio, StringFormat='👨‍🔧 Мастер: {0}'}" FontSize="13" TextColor="#111827"/>
+                        <Label Text="{Binding SelectedService.DisplayText, StringFormat='✂️ Услуга: {0}'}" FontSize="13" TextColor="#111827"/>
+                        <Label Text="{Binding SelectedTimeSlot.DisplayTime, StringFormat='⏰ Время: {0}'}" FontSize="13" TextColor="#111827"/>
                     </VerticalStackLayout>
-                </Frame>
+                </Frame>-->
 
-                <!-- 🔹 МАСТЕРА -->
-            
+                <!-- МАСТЕРА -->
                 <VerticalStackLayout>
                     <Label Text="Мастера" FontSize="20" FontAttributes="Bold" TextColor="#111827" Margin="0,0,0,10"/>
                     <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding SelectedShop.Masters}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="models:Master">
                                 <Border StrokeShape="RoundRectangle 16"
-                        Stroke="#E5E7EB"
-                        StrokeThickness="1"
-                        BackgroundColor="White"
-                        Padding="12"
-                        Margin="0,0,0,8">
+                                        Stroke="#E5E7EB" StrokeThickness="2"
+                                        BackgroundColor="White"
+                                        Padding="12" Margin="0,0,0,8">
+
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="#F3E8FF"/>
+                                            <Setter Property="Stroke" Value="#6B46C1"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
 
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=SelectMasterCommand}" CommandParameter="{Binding .}"/>
@@ -142,31 +100,17 @@
                                         <Border Grid.Column="0" WidthRequest="56" HeightRequest="56" StrokeShape="RoundRectangle 28" StrokeThickness="2" Stroke="Purple" BackgroundColor="Purple">
                                             <Label Text="{Binding Initial}" TextColor="White" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
                                         </Border>
-
                                         <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
                                             <Label Text="{Binding Fio}" FontAttributes="Bold" FontSize="16" TextColor="#111827"/>
                                             <Label Text="{Binding Grade}" TextColor="#666666"/>
                                         </VerticalStackLayout>
-
                                         <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="End">
                                             <Label Text="Уровень" TextColor="#666666" FontSize="11"/>
                                             <Label Text="{Binding Grade}" FontAttributes="Bold" FontSize="13" TextColor="Purple"/>
                                         </VerticalStackLayout>
-
-                                        <!-- КНОПКА ИЗБРАННОГО -->
-                                        <Label Grid.Column="3"
-       Text="❤️"
-       FontSize="22"
-       HorizontalTextAlignment="Center"
-       VerticalTextAlignment="Center"
-       VerticalOptions="Center"
-       HorizontalOptions="Center"
-       WidthRequest="44"
-       HeightRequest="44"
-       BackgroundColor="Transparent">
+                                        <Label Grid.Column="3" Text="❤️" FontSize="22" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="44" HeightRequest="44" BackgroundColor="Transparent">
                                             <Label.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=ToggleFavoriteCommand}" 
-                              CommandParameter="{Binding .}"/>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=ToggleFavoriteCommand}" CommandParameter="{Binding .}"/>
                                             </Label.GestureRecognizers>
                                         </Label>
                                     </Grid>
@@ -176,7 +120,7 @@
                     </VerticalStackLayout>
                 </VerticalStackLayout>
 
-                <!-- 🔹 УСЛУГИ -->
+                <!-- УСЛУГИ -->
                 <VerticalStackLayout>
                     <Label Text="Услуги" FontSize="20" FontAttributes="Bold" TextColor="#111827" Margin="0,0,0,10"/>
                     <CollectionView ItemsSource="{Binding SelectedShop.AllServices}" SelectionMode="None" HeightRequest="60">
@@ -186,19 +130,29 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:ServiceItem">
                                 <Border StrokeShape="RoundRectangle 999" 
-                                       Stroke="#E5E7EB" 
-                                       StrokeThickness="1"
-                                       BackgroundColor="White"
-                                       Padding="16,10" 
-                                       HeightRequest="40">
+                                        Stroke="#E5E7EB" StrokeThickness="2"
+                                        BackgroundColor="White"
+                                        Padding="16,10" HeightRequest="40">
+
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="#F3E8FF"/>
+                                            <Setter Property="Stroke" Value="#6B46C1"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=SelectServiceItemCommand}" CommandParameter="{Binding .}"/>
                                     </Border.GestureRecognizers>
-                                    <Label Text="{Binding DisplayText}" 
-                                          FontSize="13" 
-                                          VerticalTextAlignment="Center" 
-                                          HorizontalTextAlignment="Center" 
-                                          TextColor="#111827"/>
+
+                                    <Label Text="{Binding DisplayText}" FontSize="13" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="#111827">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="TextColor" Value="#6B46C1"/>
+                                                <Setter Property="FontAttributes" Value="Bold"/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
                                 </Border>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
@@ -210,16 +164,12 @@
                     <DatePicker Date="{Binding SelectedDate}" MinimumDate="{x:Static sys:DateTime.Now}" BackgroundColor="#F9FAFB" TextColor="#111827"/>
                 </VerticalStackLayout>
 
-                <!-- 🔹 СЛОТЫ ВРЕМЕНИ (БЕЗ КОНВЕРТЕРОВ) -->
+                <!-- СЛОТЫ ВРЕМЕНИ -->
                 <VerticalStackLayout Spacing="10" Margin="0,10,0,20">
                     <Label Text="Доступное время (8:00 - 19:00)" FontSize="16" FontAttributes="Bold" TextColor="#111827"/>
+                    <Label Text="Сначала выберите мастера" TextColor="Gray" HorizontalOptions="Center" Margin="0,10,0,0"/>
 
-                    <Label Text="👆 Сначала выберите мастера" TextColor="Gray" HorizontalOptions="Center" Margin="0,10,0,0"
-                          IsVisible="{Binding SelectedMaster, Converter={x:Static converters:InvertedNullConverter.Instance}}"/>
-
-                    <CollectionView ItemsSource="{Binding TimeSlots}" 
-                                   SelectionMode="None" 
-                                   HeightRequest="180">
+                    <CollectionView ItemsSource="{Binding TimeSlots}" SelectionMode="None" HeightRequest="180">
                         <CollectionView.ItemsLayout>
                             <GridItemsLayout Orientation="Vertical" Span="3" />
                         </CollectionView.ItemsLayout>
@@ -233,10 +183,30 @@
                                        Margin="5"
                                        IsEnabled="{Binding IsAvailable}"
                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=SelectTimeSlotCommand}"
-                                       CommandParameter="{Binding .}"/>
+                                       CommandParameter="{Binding .}">
+
+                                    <Button.Triggers>
+                                        <!-- Серый для недоступных -->
+                                        <DataTrigger TargetType="Button" Binding="{Binding IsAvailable}" Value="False">
+                                            <Setter Property="BackgroundColor" Value="#9CA3AF"/>
+                                            <Setter Property="TextColor" Value="#6B7280"/>
+                                            <Setter Property="FontSize" Value="12"/>
+                                        </DataTrigger>
+                                        <!-- Зелёный для выбранного -->
+                                        <DataTrigger TargetType="Button" Binding="{Binding IsSelected}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="#10B981"/>
+                                            <Setter Property="TextColor" Value="White"/>
+                                            <Setter Property="FontSize" Value="16"/>
+                                            <Setter Property="FontAttributes" Value="Bold"/>
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
+
+                    <Label Text="{Binding CurrentServicePrice, StringFormat='Стоимость: {0:N0} ₽'}" 
+                           FontSize="18" FontAttributes="Bold" TextColor="#10B981" HorizontalTextAlignment="Center" Margin="0,10"/>
                 </VerticalStackLayout>
 
                 <Button Text="Записаться"
@@ -245,8 +215,7 @@
                        CornerRadius="12"
                        HeightRequest="50"
                        Command="{Binding BookAppointmentCommand}"
-                       Margin="0,12,0,24"
-                       IsEnabled="{Binding SelectedTimeSlot, Converter={x:Static converters:NotNullConverter.Instance}}"/>
+                       Margin="0,12,0,24"/>
 
             </VerticalStackLayout>
         </ScrollView>

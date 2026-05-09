@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using Npgsql;
-
+using BCrypt.Net;
 namespace BarberApp.Services;
 
 public class AuthService
@@ -20,7 +20,7 @@ public class AuthService
         await connection.OpenAsync();
 
         var user = await connection.QueryFirstOrDefaultAsync(@"
-            SELECT id, password_hash FROM client WHERE login = @Login",
+        SELECT id, password_hash FROM client WHERE login = @Login",
             new { Login = login });
 
         if (user == null)
@@ -29,35 +29,63 @@ public class AuthService
             return null;
         }
 
-        // Для демо: сравниваем пароли как строки
-        if (user.password_hash == password)
+        // ✅ ПРОВЕРКА ПАРОЛЯ ЧЕРЕЗ BCRYPT
+        try
         {
-            System.Diagnostics.Debug.WriteLine($">> ✅ Пароль верен");
-            return user.id;
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, user.password_hash);
+
+            if (isPasswordValid)
+            {
+                System.Diagnostics.Debug.WriteLine($">> ✅ Пароль верен (хэш совпадает)");
+                return user.id;
+            }
+        }
+        catch (Exception ex)
+        {
+            // Если хэш в базе не в формате BCrypt (старые записи)
+            System.Diagnostics.Debug.WriteLine($">> ⚠️ Ошибка проверки хэша: {ex.Message}");
+
+            // 🔧 Временный фолбэк для старых паролей (удали после миграции)
+            if (user.password_hash == password)
+            {
+                System.Diagnostics.Debug.WriteLine($">> ✅ Пароль верен (старый формат)");
+                return user.id;
+            }
         }
 
         System.Diagnostics.Debug.WriteLine($">> ❌ Неверный пароль");
         return null;
     }
 
+
+
     public async Task<int?> RegisterAsync(string name, string phone, string login, string password)
     {
-        using var connection = CreateConnection();
-        await connection.OpenAsync();
+    using var connection = CreateConnection();
+    await connection.OpenAsync();
 
-        var exists = await connection.ExecuteScalarAsync<bool>(@"
-            SELECT EXISTS(SELECT 1 FROM client WHERE login = @Login OR phone = @Phone)",
-            new { Login = login, Phone = phone });
+    // Проверка существования
+    var exists = await connection.ExecuteScalarAsync<bool>(
+        "SELECT EXISTS(SELECT 1 FROM client WHERE login = @Login)",
+        new { Login = login });
 
-        if (exists)
-            return null;
+    if (exists) return null;
 
-        var id = await connection.ExecuteScalarAsync<int>(@"
-            INSERT INTO client (name, phone, login, password_hash)
-            VALUES (@Name, @Phone, @Login, @Password)
-            RETURNING id",
-            new { Name = name, Phone = phone, Login = login, Password = password });
+    // ✅ ХЭШИРУЕМ ПАРОЛЬ
+    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, BCrypt.Net.BCrypt.GenerateSalt(12));
 
-        return id;
+    var sql = @"
+        INSERT INTO client (name, phone, login, password_hash, created_at)
+        VALUES (@Name, @Phone, @Login, @Password, NOW())
+        RETURNING id";
+
+    return await connection.ExecuteScalarAsync<int>(sql, new
+    {
+        Name = name,
+        Phone = phone,
+        Login = login,
+        Password = hashedPassword // ✅ Сохраняем хэш
+    });
     }
+
 }

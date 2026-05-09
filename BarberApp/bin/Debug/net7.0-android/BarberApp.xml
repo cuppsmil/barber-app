@@ -4,6 +4,24 @@
         <name>BarberApp</name>
     </assembly>
     <members>
+        <member name="T:BarberApp.Models.Master">
+            <inheritdoc/>
+        </member>
+        <member name="P:BarberApp.Models.Master.IsSelected">
+            <inheritdoc cref="F:BarberApp.Models.Master._isSelected"/>
+        </member>
+        <member name="T:BarberApp.Models.ServiceItem">
+            <inheritdoc/>
+        </member>
+        <member name="P:BarberApp.Models.ServiceItem.IsSelected">
+            <inheritdoc cref="F:BarberApp.Models.ServiceItem._isSelected"/>
+        </member>
+        <member name="T:BarberApp.Models.TimeSlot">
+            <inheritdoc/>
+        </member>
+        <member name="P:BarberApp.Models.TimeSlot.IsSelected">
+            <inheritdoc cref="F:BarberApp.Models.TimeSlot._isSelected"/>
+        </member>
         <member name="T:BarberApp.ViewModels.AdminAppointmentsViewModel">
             <inheritdoc/>
             <inheritdoc/>
@@ -177,6 +195,9 @@
         <member name="P:BarberApp.ViewModels.HomeViewModel.SelectedDate">
             <inheritdoc cref="F:BarberApp.ViewModels.HomeViewModel._selectedDate"/>
         </member>
+        <member name="P:BarberApp.ViewModels.HomeViewModel.CurrentServicePrice">
+            <inheritdoc cref="F:BarberApp.ViewModels.HomeViewModel._currentServicePrice"/>
+        </member>
         <member name="M:BarberApp.ViewModels.HomeViewModel.OnSelectedShopChanged(BarberApp.Models.BarberShop,BarberApp.Models.BarberShop)">
             <summary>Executes the logic for when <see cref="P:BarberApp.ViewModels.HomeViewModel.SelectedShop"/> just changed.</summary>
             <param name="oldValue">The previous property value that was replaced.</param>
@@ -188,6 +209,12 @@
             <param name="oldValue">The previous property value that was replaced.</param>
             <param name="newValue">The new property value that was set.</param>
             <remarks>This method is invoked right after the value of <see cref="P:BarberApp.ViewModels.HomeViewModel.SelectedMaster"/> is changed.</remarks>
+        </member>
+        <member name="M:BarberApp.ViewModels.HomeViewModel.OnSelectedServiceChanged(BarberApp.Models.ServiceItem,BarberApp.Models.ServiceItem)">
+            <summary>Executes the logic for when <see cref="P:BarberApp.ViewModels.HomeViewModel.SelectedService"/> just changed.</summary>
+            <param name="oldValue">The previous property value that was replaced.</param>
+            <param name="newValue">The new property value that was set.</param>
+            <remarks>This method is invoked right after the value of <see cref="P:BarberApp.ViewModels.HomeViewModel.SelectedService"/> is changed.</remarks>
         </member>
         <member name="M:BarberApp.ViewModels.HomeViewModel.OnSelectedDateChanged(System.DateTime)">
             <summary>Executes the logic for when <see cref="P:BarberApp.ViewModels.HomeViewModel.SelectedDate"/> just changed.</summary>
@@ -257,6 +284,21 @@
         <member name="P:BarberApp.ViewModels.LoginViewModel.ErrorMessage">
             <inheritdoc cref="F:BarberApp.ViewModels.LoginViewModel._errorMessage"/>
         </member>
+        <member name="P:BarberApp.ViewModels.LoginViewModel.NameError">
+            <inheritdoc cref="F:BarberApp.ViewModels.LoginViewModel._nameError"/>
+        </member>
+        <member name="P:BarberApp.ViewModels.LoginViewModel.PhoneError">
+            <inheritdoc cref="F:BarberApp.ViewModels.LoginViewModel._phoneError"/>
+        </member>
+        <member name="P:BarberApp.ViewModels.LoginViewModel.LoginError">
+            <inheritdoc cref="F:BarberApp.ViewModels.LoginViewModel._loginError"/>
+        </member>
+        <member name="P:BarberApp.ViewModels.LoginViewModel.PasswordError">
+            <inheritdoc cref="F:BarberApp.ViewModels.LoginViewModel._passwordError"/>
+        </member>
+        <member name="P:BarberApp.ViewModels.LoginViewModel.ConfirmPasswordError">
+            <inheritdoc cref="F:BarberApp.ViewModels.LoginViewModel._confirmPasswordError"/>
+        </member>
         <member name="T:BarberApp.ViewModels.ProfileViewModel">
             <inheritdoc/>
             <inheritdoc/>
@@ -281,8 +323,8 @@
         <member name="P:BarberApp.ViewModels.ProfileViewModel.IsEditFormVisible">
             <inheritdoc cref="F:BarberApp.ViewModels.ProfileViewModel._isEditFormVisible"/>
         </member>
-        <member name="P:BarberApp.ViewModels.ProfileViewModel.EditLogin">
-            <inheritdoc cref="F:BarberApp.ViewModels.ProfileViewModel._editLogin"/>
+        <member name="P:BarberApp.ViewModels.ProfileViewModel.EditName">
+            <inheritdoc cref="F:BarberApp.ViewModels.ProfileViewModel._editName"/>
         </member>
         <member name="P:BarberApp.ViewModels.ProfileViewModel.EditPassword">
             <inheritdoc cref="F:BarberApp.ViewModels.ProfileViewModel._editPassword"/>
@@ -313,6 +355,9 @@
             A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instances
             for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
             </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsSelected">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsSelected" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Items">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Items" generated properties.</summary>
@@ -371,6 +416,9 @@
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedDate">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedDate" generated properties.</summary>
         </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CurrentServicePrice">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CurrentServicePrice" generated properties.</summary>
+        </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Name">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Name" generated properties.</summary>
         </member>
@@ -385,6 +433,21 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsBusy">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsBusy" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.NameError">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "NameError" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.PhoneError">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "PhoneError" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LoginError">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LoginError" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.PasswordError">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "PasswordError" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ConfirmPasswordError">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ConfirmPasswordError" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.History">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "History" generated properties.</summary>
@@ -404,8 +467,8 @@
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsEditFormVisible">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsEditFormVisible" generated properties.</summary>
         </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.EditLogin">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "EditLogin" generated properties.</summary>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.EditName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "EditName" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.EditPassword">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "EditPassword" generated properties.</summary>
@@ -415,6 +478,9 @@
             A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instances
             for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
             </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsSelected">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsSelected" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Items">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Items" generated properties.</summary>
@@ -473,6 +539,9 @@
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedDate">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedDate" generated properties.</summary>
         </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CurrentServicePrice">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CurrentServicePrice" generated properties.</summary>
+        </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Name">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Name" generated properties.</summary>
         </member>
@@ -487,6 +556,21 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsBusy">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsBusy" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.NameError">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "NameError" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.PhoneError">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "PhoneError" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LoginError">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LoginError" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.PasswordError">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "PasswordError" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ConfirmPasswordError">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ConfirmPasswordError" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.History">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "History" generated properties.</summary>
@@ -506,8 +590,8 @@
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsEditFormVisible">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsEditFormVisible" generated properties.</summary>
         </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.EditLogin">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "EditLogin" generated properties.</summary>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.EditName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "EditName" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.EditPassword">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "EditPassword" generated properties.</summary>

@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "+54qadAL5G1ZESzm7mVKxXhOqMQJWMP9EKEj4to55S84yKrM9Mymq1QjS+d9DSuotWYRjcAMwcri2xIh7JJUTA==",
+  "dgSpecHash": "JTRfE3hd63H1x+eVhTXcCm4tSLcKZ3EJO/j/e2QOaeS0zoqI67qKfxk+f53DZItdCiA/MBfqKC8s8UsCx3DPdg==",
   "success": true,
   "projectFilePath": "C:\\Users\\artur\\source\\repos\\BarberApp\\BarberApp\\BarberApp.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\artur\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\artur\\.nuget\\packages\\communitytoolkit.mvvm\\8.4.2\\communitytoolkit.mvvm.8.4.2.nupkg.sha512",
     "C:\\Users\\artur\\.nuget\\packages\\dapper\\2.1.72\\dapper.2.1.72.nupkg.sha512",
     "C:\\Users\\artur\\.nuget\\packages\\googlegson\\2.9.1.1\\googlegson.2.9.1.1.nupkg.sha512",

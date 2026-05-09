@@ -2,6 +2,7 @@
 using Npgsql;
 using BarberApp.Models;
 using System.Data;
+using BCrypt.Net;
 
 namespace BarberApp.Services;
 
@@ -187,31 +188,29 @@ public class DatabaseService
     }
 
     // === СОЗДАТЬ ЗАПИСЬ ===
-    public async Task<int> CreateAppointmentAsync(int masterId, int clientId, int serviceId, DateTime date)
+    public async Task<int> CreateAppointmentAsync(int masterId, int clientId, int serviceId, DateTime date, decimal price)
     {
         using var connection = CreateConnection();
         await connection.OpenAsync();
 
         var isBusy = await connection.ExecuteScalarAsync<bool>(@"
-            SELECT EXISTS(
-                SELECT 1 FROM appointments
-                WHERE master_id = @MasterId AND date = @Date
-            )", new { MasterId = masterId, Date = date });
+        SELECT EXISTS(SELECT 1 FROM appointments WHERE master_id = @MasterId AND date = @Date)",
+            new { MasterId = masterId, Date = date });
 
-        if (isBusy)
-            throw new Exception("Это время уже занято!");
+        if (isBusy) throw new Exception("Это время уже занято!");
 
         var sql = @"
-            INSERT INTO appointments (master_id, client_id, service_id, date, created_at)
-            VALUES (@MasterId, @ClientId, @ServiceId, @Date, NOW())
-            RETURNING id";
+        INSERT INTO appointments (master_id, client_id, service_id, date, price, created_at)
+        VALUES (@MasterId, @ClientId, @ServiceId, @Date, @Price, NOW())
+        RETURNING id";
 
         return await connection.ExecuteScalarAsync<int>(sql, new
         {
             MasterId = masterId,
             ClientId = clientId,
             ServiceId = serviceId,
-            Date = date
+            Date = date,
+            Price = price
         });
     }
 
@@ -236,58 +235,36 @@ public class DatabaseService
     // === ИСТОРИЯ ЗАПИСЕЙ (ИСПРАВЛЕНО) ===
     public async Task<List<AppointmentItem>> GetClientHistoryAsync(int clientId)
     {
-        System.Diagnostics.Debug.WriteLine($">>> ЗАПРОС ИСТОРИИ для clientId={clientId}");
-
         using var connection = CreateConnection();
         await connection.OpenAsync();
 
-        // ✅ ИСПОЛЬЗУЕМ ПРОСТЫЕ НАЗВАНИЯ КОЛОНОК
         var sql = @"
-        SELECT 
-            a.id,
-            a.date,
-            m.fio,
-            s.name as salon,
-            srv.name as service
+        SELECT a.id, a.date, a.price, c.name as client_name, m.fio as master_name, 
+               s.name as salon_name, srv.name as service_name
         FROM appointments a
-        LEFT JOIN master m ON a.master_id = m.id
-        LEFT JOIN salontomaster stm ON m.id = stm.master_id
-        LEFT JOIN salon s ON stm.salon_id = s.id
-        LEFT JOIN service srv ON a.service_id = srv.id
+        JOIN master m ON a.master_id = m.id
+        JOIN salontomaster stm ON m.id = stm.master_id
+        JOIN salon s ON stm.salon_id = s.id
+        JOIN client c ON a.client_id = c.id
+        JOIN service srv ON a.service_id = srv.id
         WHERE a.client_id = @ClientId
         ORDER BY a.date DESC";
 
-        try
+        var items = new List<AppointmentItem>();
+        var rows = await connection.QueryAsync(sql, new { ClientId = clientId });
+        foreach (var r in rows)
         {
-            var items = new List<AppointmentItem>();
-
-            // ЯВНОЕ ЧТЕНИЕ КАЖДОЙ КОЛОНКИ
-            var rows = await connection.QueryAsync(sql, new { ClientId = clientId });
-
-            foreach (var row in rows)
+            items.Add(new AppointmentItem
             {
-                var item = new AppointmentItem
-                {
-                    Id = Convert.ToInt32(row.id),
-                    Date = Convert.ToDateTime(row.date),
-                    MasterName = row.fio != null ? row.fio.ToString() : "Мастер не найден",
-                    SalonName = row.salon != null ? row.salon.ToString() : "Салон не найден",
-                    ServiceName = row.service != null ? row.service.ToString() : "Услуга не найдена"
-                };
-
-                items.Add(item);
-
-                System.Diagnostics.Debug.WriteLine($"   ✅ {item.Date}: {item.MasterName} | {item.SalonName}");
-            }
-
-            System.Diagnostics.Debug.WriteLine($">>> ВСЕГО ЗАПИСЕЙ: {items.Count}");
-            return items;
+                Id = r.id,
+                Date = r.date,
+                Price = r.price,
+                MasterName = r.client_name ?? "Клиент",
+                SalonName = r.master_name ?? "Мастер",
+                ServiceName = r.service_name ?? "Услуга"
+            });
         }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"❌ ОШИБКА: {ex.Message}");
-            return new List<AppointmentItem>();
-        }
+        return items;
     }
 
     // === ИЗБРАННОЕ ===
@@ -413,36 +390,39 @@ public class DatabaseService
 
         var sql = @"
         SELECT 
-            a.id,
-            a.date,
-            c.name as client_name,
-            m.fio as master_name,
+            a.id, 
+            a.date, 
+            COALESCE(a.price, 0) as price,
+            c.name as client_name, 
+            m.fio as master_name, 
             srv.name as service_name
         FROM appointments a
-        JOIN master m ON a.master_id = m.id
-        JOIN salontomaster stm ON m.id = stm.master_id
-        JOIN client c ON a.client_id = c.id
-        JOIN service srv ON a.service_id = srv.id
+        INNER JOIN master m ON a.master_id = m.id
+        INNER JOIN salontomaster stm ON m.id = stm.master_id
+        INNER JOIN client c ON a.client_id = c.id
+        INNER JOIN service srv ON a.service_id = srv.id
         WHERE stm.salon_id = @SalonId
         ORDER BY a.date DESC";
 
         try
         {
-            var rows = await connection.QueryAsync(sql, new { SalonId = salonId });
             var items = new List<AppointmentItem>();
+            var rows = await connection.QueryAsync(sql, new { SalonId = salonId });
 
             foreach (var row in rows)
             {
-                System.Diagnostics.Debug.WriteLine($">>> Row: id={row.id}, date={row.date}, client={row.client_name}, master={row.master_name}");
-
-                items.Add(new AppointmentItem
+                var item = new AppointmentItem
                 {
-                    Id = row.id,
-                    Date = row.date,
-                    MasterName = row.client_name ?? "Клиент",
-                    SalonName = row.master_name ?? "Мастер",
-                    ServiceName = row.service_name ?? "Услуга"
-                });
+                    Id = Convert.ToInt32(row.id),
+                    Date = Convert.ToDateTime(row.date),
+                    Price = row.price != null ? Convert.ToDecimal(row.price) : 0,
+                    MasterName = row.client_name?.ToString() ?? "Клиент",
+                    SalonName = row.master_name?.ToString() ?? "Мастер",
+                    ServiceName = row.service_name?.ToString() ?? "Услуга"
+                };
+
+                items.Add(item);
+                System.Diagnostics.Debug.WriteLine($">>> Запись: {item.Date} | Цена: {item.Price} ₽");
             }
 
             System.Diagnostics.Debug.WriteLine($">>> Всего записей: {items.Count}");
@@ -507,5 +487,40 @@ public class DatabaseService
     {
         using var c = CreateConnection(); await c.OpenAsync();
         return await c.QueryFirstOrDefaultAsync<Salon>("SELECT * FROM salon WHERE id = @Id", new { Id = id });
+    }
+    public async Task<decimal> GetServicePriceAsync(int masterId, int serviceId)
+    {
+        using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        var price = await connection.ExecuteScalarAsync<decimal?>(@"
+        SELECT price FROM mastertoservice 
+        WHERE master_id = @MasterId AND service_id = @ServiceId",
+            new { MasterId = masterId, ServiceId = serviceId });
+
+        return price ?? 0;
+    }
+    // === ОБНОВЛЕНИЕ ПРОФИЛЯ (ИМЯ И ПАРОЛЬ) ===
+    public async Task UpdateClientProfileAsync(int clientId, string newName, string? newPassword = null)
+    {
+        using var connection = CreateConnection();
+        await connection.OpenAsync();
+
+        if (string.IsNullOrWhiteSpace(newPassword))
+        {
+            // Только имя
+            await connection.ExecuteAsync(
+                "UPDATE client SET name = @Name WHERE id = @Id",
+                new { Name = newName, Id = clientId });
+        }
+        else
+        {
+            // ✅ ХЭШИРУЕМ ПАРОЛЬ
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword, BCrypt.Net.BCrypt.GenerateSalt(12));
+
+            await connection.ExecuteAsync(
+                "UPDATE client SET name = @Name, password_hash = @Password WHERE id = @Id",
+                new { Name = newName, Password = hashedPassword, Id = clientId });
+        }
     }
 }

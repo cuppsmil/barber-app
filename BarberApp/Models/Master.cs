@@ -1,6 +1,8 @@
-﻿namespace BarberApp.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public class Master
+namespace BarberApp.Models;
+
+public partial class Master : ObservableObject
 {
     public int Id { get; set; }
     public string Fio { get; set; } = string.Empty;
@@ -9,4 +11,7 @@ public class Master
     public string Grade { get; set; } = string.Empty;
 
     public string Initial => !string.IsNullOrEmpty(Fio) ? Fio[0].ToString().ToUpper() : "M";
+
+    [ObservableProperty]
+    private bool _isSelected;
 }

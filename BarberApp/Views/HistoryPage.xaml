@@ -110,6 +110,12 @@
                                        TextColor="#374151"
                                        VerticalTextAlignment="Center"/>
                             </HorizontalStackLayout>
+                            <!-- Цена -->
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="💵" FontSize="16"/>
+                                <Label Text="{Binding Price, StringFormat='{0:N0} ₽'}" 
+           FontSize="15" FontAttributes="Bold" TextColor="#059669"/>
+                            </HorizontalStackLayout>
 
                         </VerticalStackLayout>
                     </Frame>

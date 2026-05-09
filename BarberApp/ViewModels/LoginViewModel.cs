@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Text.RegularExpressions;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using BarberApp.Services;
 using BarberApp.Views;
@@ -19,7 +20,13 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty] private bool _isBusy = false;
     [ObservableProperty] private string _errorMessage = string.Empty;
 
-    // Команды для XAML (если нужно)
+    // ✅ НОВЫЕ: Сообщения об ошибках для каждого поля
+    [ObservableProperty] private string _nameError = string.Empty;
+    [ObservableProperty] private string _phoneError = string.Empty;
+    [ObservableProperty] private string _loginError = string.Empty;
+    [ObservableProperty] private string _passwordError = string.Empty;
+    [ObservableProperty] private string _confirmPasswordError = string.Empty;
+
     public ICommand PerformLoginCommand { get; }
     public ICommand RegisterCommand { get; }
     public ICommand ToggleModeCommand { get; }
@@ -28,17 +35,138 @@ public partial class LoginViewModel : ObservableObject
     {
         _authService = new AuthService();
         _secureStorage = new SecureStorageService();
-
-        // Команды просто вызывают методы
         PerformLoginCommand = new Command(async () => await PerformLoginAsync());
         RegisterCommand = new Command(async () => await RegisterAsync());
         ToggleModeCommand = new Command(ToggleMode);
     }
 
-    // ✅ СДЕЛАЛ PUBLIC, ЧТОБЫ ВЫЗЫВАТЬ ИЗ CODE-BEHIND
+    // === ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ВАЛИДАЦИИ ===
+
+    private void ClearErrors()
+    {
+        NameError = PhoneError = LoginError = PasswordError = ConfirmPasswordError = ErrorMessage = string.Empty;
+    }
+
+    private bool ValidateName()
+    {
+        if (string.IsNullOrWhiteSpace(Name))
+        {
+            NameError = "Введите имя";
+            return false;
+        }
+        if (Name.Length < 2)
+        {
+            NameError = "Имя должно содержать минимум 2 символа";
+            return false;
+        }
+        if (!Regex.IsMatch(Name, @"^[а-яА-ЯёЁa-zA-Z\s\-']+$"))
+        {
+            NameError = "Имя может содержать только буквы, пробелы, дефис и апостроф";
+            return false;
+        }
+        NameError = string.Empty;
+        return true;
+    }
+
+    private bool ValidatePhone()
+    {
+        if (string.IsNullOrWhiteSpace(Phone))
+        {
+            PhoneError = "Введите телефон";
+            return false;
+        }
+        // Убираем всё кроме цифр и +
+        var cleanPhone = Regex.Replace(Phone, @"[^\d+]", "");
+
+        // Проверка российского формата: +7 или 8, потом 10 цифр
+        if (!Regex.IsMatch(cleanPhone, @"^(\+7|8)\d{10}$"))
+        {
+            PhoneError = "Введите телефон в формате +7 (999) 123-45-67";
+            return false;
+        }
+        PhoneError = string.Empty;
+        return true;
+    }
+
+    private bool ValidateLogin()
+    {
+        if (string.IsNullOrWhiteSpace(Login))
+        {
+            LoginError = "Введите логин";
+            return false;
+        }
+        if (Login.Length < 3)
+        {
+            LoginError = "Логин должен содержать минимум 3 символа";
+            return false;
+        }
+        if (Login.Length > 20)
+        {
+            LoginError = "Логин не должен превышать 20 символов";
+            return false;
+        }
+        if (!Regex.IsMatch(Login, @"^[a-zA-Z0-9_]+$"))
+        {
+            LoginError = "Логин может содержать только латинские буквы, цифры и _";
+            return false;
+        }
+        LoginError = string.Empty;
+        return true;
+    }
+
+    private bool ValidatePassword()
+    {
+        if (string.IsNullOrWhiteSpace(Password))
+        {
+            PasswordError = "Введите пароль";
+            return false;
+        }
+        if (Password.Length < 8)
+        {
+            PasswordError = "Пароль должен содержать минимум 8 символов";
+            return false;
+        }
+        if (!Regex.IsMatch(Password, @"[A-Z]"))
+        {
+            PasswordError = "Пароль должен содержать хотя бы одну заглавную букву";
+            return false;
+        }
+        if (!Regex.IsMatch(Password, @"[a-z]"))
+        {
+            PasswordError = "Пароль должен содержать хотя бы одну строчную букву";
+            return false;
+        }
+        if (!Regex.IsMatch(Password, @"[0-9]"))
+        {
+            PasswordError = "Пароль должен содержать хотя бы одну цифру";
+            return false;
+        }
+        PasswordError = string.Empty;
+        return true;
+    }
+
+    private bool ValidateConfirmPassword()
+    {
+        if (string.IsNullOrWhiteSpace(ConfirmPassword))
+        {
+            ConfirmPasswordError = "Подтвердите пароль";
+            return false;
+        }
+        if (ConfirmPassword != Password)
+        {
+            ConfirmPasswordError = "Пароли не совпадают";
+            return false;
+        }
+        ConfirmPasswordError = string.Empty;
+        return true;
+    }
+
+    // === ОСНОВНЫЕ МЕТОДЫ ===
+
     public async Task PerformLoginAsync()
     {
         if (IsBusy) return;
+        ClearErrors();
 
         try
         {
@@ -61,14 +189,8 @@ public partial class LoginViewModel : ObservableObject
                 System.Diagnostics.Debug.WriteLine($">> ✅ Вход успешен! ClientId: {clientId.Value}");
 
                 await _secureStorage.SaveCredentialsAsync(
-                    clientId.Value,
-                    Name,
-                    Login,
-                    Phone, // ✅ Передаем телефон
-                    Password
-                );
+                    clientId.Value, Name, Login, Phone, Password);
 
-                System.Diagnostics.Debug.WriteLine(">> 🚀 Переход на главную...");
                 Application.Current!.MainPage = new NavigationPage(new RootPage());
             }
             else
@@ -88,26 +210,25 @@ public partial class LoginViewModel : ObservableObject
         }
     }
 
-    // ✅ СДЕЛАЛ PUBLIC
     public async Task RegisterAsync()
     {
         if (IsBusy) return;
+        ClearErrors();
 
         try
         {
-            if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Phone) ||
-                string.IsNullOrWhiteSpace(Login) || string.IsNullOrWhiteSpace(Password))
-            {
-                ErrorMessage = "Заполните все поля";
-                await Application.Current!.MainPage!.DisplayAlert("Ошибка", ErrorMessage, "OK");
-                return;
-            }
+            // ✅ ЗАПУСКАЕМ ВАЛИДАЦИЮ ВСЕХ ПОЛЕЙ
+            bool isValid = true;
+            isValid &= ValidateName();
+            isValid &= ValidatePhone();
+            isValid &= ValidateLogin();
+            isValid &= ValidatePassword();
+            isValid &= ValidateConfirmPassword();
 
-            if (Password != ConfirmPassword)
+            if (!isValid)
             {
-                ErrorMessage = "Пароли не совпадают";
-                await Application.Current!.MainPage!.DisplayAlert("Ошибка", ErrorMessage, "OK");
-                return;
+                ErrorMessage = "Ошибка";
+                return; // Не показываем MessageBox, ошибки уже в полях
             }
 
             IsBusy = true;
@@ -115,26 +236,23 @@ public partial class LoginViewModel : ObservableObject
 
             System.Diagnostics.Debug.WriteLine($">> 📝 Регистрация: {Name}, {Login}");
 
-            int? clientId = await _authService.RegisterAsync(Name, Phone, Login, Password);
+            // Нормализуем телефон перед отправкой (убираем пробелы, скобки, тире)
+            var cleanPhone = Regex.Replace(Phone, @"[^\d+]", "");
+
+            int? clientId = await _authService.RegisterAsync(Name, cleanPhone, Login, Password);
 
             if (clientId.HasValue)
             {
                 System.Diagnostics.Debug.WriteLine($">> ✅ Регистрация успешна! ClientId: {clientId.Value}");
 
                 await _secureStorage.SaveCredentialsAsync(
-                    clientId.Value,
-                    Name,
-                    Login,
-                    Phone, // ✅ Передаем телефон
-                    Password
-                );
+                    clientId.Value, Name, Login, cleanPhone, Password);
 
-                System.Diagnostics.Debug.WriteLine(">> 🚀 Переход на главную...");
                 Application.Current!.MainPage = new NavigationPage(new RootPage());
             }
             else
             {
-                ErrorMessage = "Пользователь уже существует";
+                ErrorMessage = "Пользователь с таким логином уже существует";
                 await Application.Current!.MainPage!.DisplayAlert("Ошибка", ErrorMessage, "OK");
             }
         }
@@ -152,6 +270,6 @@ public partial class LoginViewModel : ObservableObject
     private void ToggleMode()
     {
         IsLoginMode = !IsLoginMode;
-        ErrorMessage = string.Empty;
+        ClearErrors();
     }
 }

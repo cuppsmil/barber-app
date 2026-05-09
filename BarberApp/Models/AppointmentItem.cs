@@ -10,4 +10,5 @@ public class AppointmentItem
     public string Status { get; set; } = "Запланировано";
     public Color StatusTextColor { get; set; } = Color.FromArgb("#4C1D95");
     public Color StatusBgColor { get; set; } = Color.FromArgb("#E9D5FF");
+    public decimal Price { get; set; }
 }

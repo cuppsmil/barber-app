@@ -12,4 +12,5 @@ public class MasterToService
 
     [Column("service_id")]  // ← Явно указываем имя колонки в БД
     public int ServiceId { get; set; }
+    public decimal Price { get; set; }
 }

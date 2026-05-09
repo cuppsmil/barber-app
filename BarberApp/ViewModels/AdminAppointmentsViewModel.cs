@@ -24,16 +24,13 @@ public partial class AdminAppointmentsViewModel : ObservableObject
     [RelayCommand]
     private async Task GoBackAsync()
     {
-        System.Diagnostics.Debug.WriteLine(">>> GoBack нажата");
         await Application.Current!.MainPage!.Navigation.PopAsync();
     }
 
     private async Task LoadDataAsync()
     {
-        System.Diagnostics.Debug.WriteLine(">>> LoadDataAsync вызван");
-
         var salonId = await _storage.GetAdminSalonIdAsync();
-        System.Diagnostics.Debug.WriteLine($">>> SalonId: {salonId?.ToString() ?? "null"}");
+        System.Diagnostics.Debug.WriteLine($">>> AdminAppointments: salonId = {salonId?.ToString() ?? "null"}");
 
         if (salonId.HasValue)
         {
@@ -42,7 +39,7 @@ public partial class AdminAppointmentsViewModel : ObservableObject
             foreach (var item in list)
             {
                 Items.Add(item);
-                System.Diagnostics.Debug.WriteLine($">>> Добавлено: {item.Date} | {item.MasterName} | {item.SalonName}");
+                System.Diagnostics.Debug.WriteLine($">>> Добавлено: {item.Date} | Цена: {item.Price} ₽");
             }
         }
     }

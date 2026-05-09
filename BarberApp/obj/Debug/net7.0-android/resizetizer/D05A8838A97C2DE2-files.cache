@@ -1,5 +1,8 @@
 ﻿obj\Debug\net7.0-android\resizetizer\r\drawable\gear.png
 obj\Debug\net7.0-android\resizetizer\r\drawable\heart.webp
+obj\Debug\net7.0-android\resizetizer\r\drawable\home.jpg
+obj\Debug\net7.0-android\resizetizer\r\drawable\journal.jpg
+obj\Debug\net7.0-android\resizetizer\r\drawable\person.jpg
 obj\Debug\net7.0-android\resizetizer\r\drawable-hdpi\dotnet_bot.png
 obj\Debug\net7.0-android\resizetizer\r\drawable-hdpi\splash.png
 obj\Debug\net7.0-android\resizetizer\r\drawable-mdpi\dotnet_bot.png

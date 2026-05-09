@@ -9,36 +9,19 @@ namespace BarberApp.ViewModels;
 public partial class HomeViewModel : ObservableObject
 {
     private readonly DatabaseService _dbService;
-
-    [ObservableProperty]
-    private ObservableCollection<BarberShop> _shops = new();
-
-    [ObservableProperty]
-    private BarberShop? _selectedShop;
-
-    [ObservableProperty]
-    private Master? _selectedMaster;
-
-    [ObservableProperty]
-    private ServiceItem? _selectedService;
-
-    [ObservableProperty]
-    private ObservableCollection<TimeSlot> _timeSlots = new();
-
-    [ObservableProperty]
-    private TimeSlot? _selectedTimeSlot;
-
-    [ObservableProperty]
-    private bool _isLoading = true;
-
-    [ObservableProperty]
-    private string _errorMessage = string.Empty;
-
-    [ObservableProperty]
-    private DateTime _selectedDate = DateTime.Now;
-
-    
     private readonly SecureStorageService _storage;
+
+    [ObservableProperty] private ObservableCollection<BarberShop> _shops = new();
+    [ObservableProperty] private BarberShop? _selectedShop;
+    [ObservableProperty] private Master? _selectedMaster;
+    [ObservableProperty] private ServiceItem? _selectedService;
+    [ObservableProperty] private ObservableCollection<TimeSlot> _timeSlots = new();
+    [ObservableProperty] private TimeSlot? _selectedTimeSlot;
+    [ObservableProperty] private bool _isLoading = true;
+    [ObservableProperty] private string _errorMessage = string.Empty;
+    [ObservableProperty] private DateTime _selectedDate = DateTime.Now;
+    [ObservableProperty] private decimal _currentServicePrice = 0;
+
     public HomeViewModel()
     {
         _dbService = new DatabaseService();
@@ -58,16 +41,8 @@ public partial class HomeViewModel : ObservableObject
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 Shops.Clear();
-                foreach (var shop in shops)
-                {
-                    Shops.Add(shop);
-                }
-
-                if (Shops.Count > 0)
-                {
-                    SelectedShop = Shops[0];
-                }
-
+                foreach (var shop in shops) Shops.Add(shop);
+                if (Shops.Count > 0) SelectedShop = Shops[0];
                 IsLoading = false;
             });
         }
@@ -84,79 +59,107 @@ public partial class HomeViewModel : ObservableObject
     partial void OnSelectedShopChanged(BarberShop? oldValue, BarberShop? newValue)
     {
         if (newValue == null) return;
+        ClearMasterSelection();
         SelectedMaster = null;
         SelectedService = null;
         SelectedTimeSlot = null;
-        System.Diagnostics.Debug.WriteLine($"🏪 САЛОН ИЗМЕНЁН: {newValue.Name}");
+        CurrentServicePrice = 0;
     }
 
     partial void OnSelectedMasterChanged(Master? oldValue, Master? newValue)
     {
         if (newValue != null)
+        {
             _ = LoadTimeSlotsAsync();
+            _ = UpdatePriceAsync();
+        }
+    }
+
+    partial void OnSelectedServiceChanged(ServiceItem? oldValue, ServiceItem? newValue)
+    {
+        if (newValue != null) _ = UpdatePriceAsync();
     }
 
     partial void OnSelectedDateChanged(DateTime value)
     {
-        if (SelectedMaster != null)
-            _ = LoadTimeSlotsAsync();
+        if (SelectedMaster != null) _ = LoadTimeSlotsAsync();
     }
 
-    private async Task LoadTimeSlotsAsync()
+    // === ЛОГИКА ВЫДЕЛЕНИЯ ===
+
+    private void ClearMasterSelection()
     {
-        if (SelectedMaster == null)
-        {
-            System.Diagnostics.Debug.WriteLine("⚠️ Мастер не выбран, слоты не грузятся.");
-            return;
-        }
+        if (SelectedShop != null)
+            foreach (var m in SelectedShop.Masters) m.IsSelected = false;
+    }
 
-        System.Diagnostics.Debug.WriteLine($"🔄 Загрузка слотов для: {SelectedMaster.Fio}, дата: {SelectedDate:d}");
+    private void ClearServiceSelection()
+    {
+        if (SelectedShop != null)
+            foreach (var s in SelectedShop.AllServices) s.IsSelected = false;
+    }
 
-        TimeSlots.Clear();
-
-        var startHour = 8;
-        var endHour = 19;
-
-        var busySlots = await _dbService.GetBusySlotsAsync(SelectedMaster.Id, SelectedDate);
-
-        for (int h = startHour; h < endHour; h++)
-        {
-            var time = new TimeSpan(h, 0, 0);
-            var slotDateTime = SelectedDate.Date.Add(time);
-
-            bool isBusyInDb = busySlots.Any(t => t == time);
-            bool isPast = slotDateTime < DateTime.Now;
-
-            TimeSlots.Add(new TimeSlot
-            {
-                Time = time,
-                IsAvailable = !isBusyInDb && !isPast
-            });
-        }
-
-        System.Diagnostics.Debug.WriteLine($"✅ Слотов загружено: {TimeSlots.Count}");
-        SelectedTimeSlot = null;
+    private void ClearTimeSlotSelection()
+    {
+        foreach (var t in TimeSlots) t.IsSelected = false;
     }
 
     [RelayCommand]
     private void SelectMaster(Master master)
     {
+        ClearMasterSelection();
+        master.IsSelected = true;
         SelectedMaster = master;
-        System.Diagnostics.Debug.WriteLine($"👨‍🔧 ВЫБРАН МАСТЕР: {master.Fio}");
     }
 
     [RelayCommand]
     private void SelectServiceItem(ServiceItem service)
     {
+        ClearServiceSelection();
+        service.IsSelected = true;
         SelectedService = service;
-        System.Diagnostics.Debug.WriteLine($"🛠️ ВЫБРАНА УСЛУГА: {service.Name}");
     }
 
     [RelayCommand]
     private void SelectTimeSlot(TimeSlot timeSlot)
     {
+        if (!timeSlot.IsAvailable) return;
+        ClearTimeSlotSelection();
+        timeSlot.IsSelected = true;
         SelectedTimeSlot = timeSlot;
-        System.Diagnostics.Debug.WriteLine($"⏰ ВЫБРАНО ВРЕМЯ: {timeSlot.DisplayTime}");
+    }
+
+    private async Task UpdatePriceAsync()
+    {
+        if (SelectedMaster != null && SelectedService != null)
+        {
+            try
+            {
+                CurrentServicePrice = await _dbService.GetServicePriceAsync(SelectedMaster.Id, SelectedService.Id);
+            }
+            catch { CurrentServicePrice = 0; }
+        }
+        else CurrentServicePrice = 0;
+    }
+
+    private async Task LoadTimeSlotsAsync()
+    {
+        if (SelectedMaster == null) return;
+        TimeSlots.Clear();
+        ClearTimeSlotSelection();
+
+        var busySlots = await _dbService.GetBusySlotsAsync(SelectedMaster.Id, SelectedDate);
+        for (int h = 8; h < 19; h++)
+        {
+            var time = new TimeSpan(h, 0, 0);
+            var slotDateTime = SelectedDate.Date.Add(time);
+            TimeSlots.Add(new TimeSlot
+            {
+                Time = time,
+                IsAvailable = !busySlots.Any(t => t == time) && slotDateTime >= DateTime.Now
+            });
+        }
+        SelectedTimeSlot = null;
     }
 
     [RelayCommand]
@@ -164,21 +167,20 @@ public partial class HomeViewModel : ObservableObject
     {
         if (SelectedShop == null || SelectedMaster == null || SelectedService == null || SelectedTimeSlot == null)
         {
-            await Application.Current!.MainPage!.DisplayAlert("Ошибка", "Выберите барбершоп, мастера, услугу и время", "OK");
+            await Application.Current!.MainPage!.DisplayAlert("Ошибка", "Выберите все параметры", "OK");
             return;
         }
 
         var appointmentDateTime = SelectedDate.Date.Add(SelectedTimeSlot.Time);
-
         if (appointmentDateTime < DateTime.Now)
         {
-            await Application.Current!.MainPage!.DisplayAlert("Ошибка", "Выбранное время уже прошло", "OK");
+            await Application.Current!.MainPage!.DisplayAlert("Ошибка", "Время уже прошло", "OK");
             return;
         }
 
         var confirmed = await Application.Current!.MainPage!.DisplayAlert(
-            "Подтверждение записи",
-            $"Записаться к {SelectedMaster.Fio} на {appointmentDateTime:dd.MM.yyyy HH:mm}?",
+            "Подтверждение",
+            $"Записаться к {SelectedMaster.Fio} на {appointmentDateTime:dd.MM.yyyy HH:mm}?\n\nСтоимость: {CurrentServicePrice:N0} ₽",
             "Да", "Отмена");
 
         if (confirmed)
@@ -186,32 +188,20 @@ public partial class HomeViewModel : ObservableObject
             try
             {
                 IsLoading = true;
-
-                // ✅ ПОЛУЧАЕМ ID ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ
-                var clientIdNullable = await _storage.GetClientIdAsync();
-                if (!clientIdNullable.HasValue || clientIdNullable.Value == 0)
+                var clientId = await _storage.GetClientIdAsync();
+                if (!clientId.HasValue || clientId.Value == 0)
                 {
                     IsLoading = false;
-                    await Application.Current!.MainPage!.DisplayAlert("Ошибка", "Сначала войдите в аккаунт!", "OK");
+                    await Application.Current!.MainPage!.DisplayAlert("Ошибка", "Сначала войдите!", "OK");
                     return;
                 }
 
-                int clientId = clientIdNullable.Value;
-                System.Diagnostics.Debug.WriteLine($">>> ЗАПИСЬ: clientId={clientId}, master={SelectedMaster.Fio}");
-
-                var appointmentId = await _dbService.CreateAppointmentAsync(
-                    SelectedMaster.Id,
-                    clientId,  // ✅ ТЕПЕРЬ ТУТ ПРАВИЛЬНЫЙ ID (9)
-                    SelectedService.Id,
-                    appointmentDateTime);
+                await _dbService.CreateAppointmentAsync(
+                    SelectedMaster.Id, clientId.Value, SelectedService.Id, appointmentDateTime, CurrentServicePrice);
 
                 IsLoading = false;
-
-                await Application.Current!.MainPage!.DisplayAlert("✅ Успешно!", $"Запись создана!", "OK");
-
+                await Application.Current!.MainPage!.DisplayAlert("✅ Успешно!", $"Запись создана!\n{CurrentServicePrice:N0} ₽", "OK");
                 MessagingCenter.Send(this, "RefreshProfile");
-                System.Diagnostics.Debug.WriteLine("📨 Отправлено сообщение RefreshProfile");
-
             }
             catch (Exception ex)
             {
@@ -221,44 +211,21 @@ public partial class HomeViewModel : ObservableObject
         }
     }
 
-    [RelayCommand]
-    private async Task ReloadAsync()
-    {
-        await LoadDataAsync();
-    }
-    // === ИЗБРАННОЕ ===
-  
+    [RelayCommand] private async Task ReloadAsync() => await LoadDataAsync();
+
     [RelayCommand]
     private async Task ToggleFavoriteAsync(Master master)
     {
         if (master == null) return;
+        var clientId = await _storage.GetClientIdAsync();
+        if (!clientId.HasValue) return;
 
-        try
-        {
-            var clientIdNullable = await _storage.GetClientIdAsync();
-            if (!clientIdNullable.HasValue) return;
+        var favs = await _dbService.GetFavoritesAsync(clientId.Value);
+        bool isAlreadyFav = favs.Any(f => f.Id == master.Id);
+        await _dbService.ToggleFavoriteAsync(clientId.Value, master.Id, !isAlreadyFav);
 
-            int clientId = clientIdNullable.Value;
-
-            // Проверяем, есть ли уже в избранном
-            var favs = await _dbService.GetFavoritesAsync(clientId);
-            bool isAlreadyFav = favs.Any(f => f.Id == master.Id);
-
-            await _dbService.ToggleFavoriteAsync(clientId, master.Id, !isAlreadyFav);
-
-            var msg = isAlreadyFav
-                ? $"❌ {master.Fio} удалён из избранного"
-                : $"❤️ {master.Fio} добавлен в избранное";
-
-            await Application.Current.MainPage.DisplayAlert("Избранное", msg, "OK");
-
-            // ✅ ОТПРАВЛЯЕМ СИГНАЛ ПРОФИЛЮ: ОБНОВИ ДАННЫЕ!
-            MessagingCenter.Send(this, "RefreshProfile");
-            System.Diagnostics.Debug.WriteLine($"📨 Отправлено RefreshProfile после изменения избранного");
-        }
-        catch (Exception ex)
-        {
-            await Application.Current.MainPage.DisplayAlert("Ошибка", ex.Message, "OK");
-        }
+        await Application.Current.MainPage.DisplayAlert("Избранное",
+            isAlreadyFav ? $"❌ {master.Fio} удалён" : $"❤️ {master.Fio} добавлен", "OK");
+        MessagingCenter.Send(this, "RefreshProfile");
     }
 }
